@@ -1,0 +1,119 @@
+
+
+:root {
+  --bg-primary: #070b1a;          /* Deep space */
+  --bg-secondary: #0d132d;        /* Night sky */
+  --accent-moon: #cfd8ff;         /* Moon glow */
+  --accent-nebula: #7b7cff;       /* Soft purple-blue */
+  --accent-star: #ffffff;         /* Stars */
+  --text-primary: #e8ebff;        /* Main text */
+  --text-muted: #9aa3d6;          /* Subtle text */
+  --glass-bg: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.15);
+}
+
+/* Global */
+body {
+  margin: 0;
+  font-family: 'Inter', 'Poppins', system-ui, sans-serif;
+  background: radial-gradient(circle at top, #121a3a 0%, var(--bg-primary) 60%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Starfield background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, white 40%, transparent 41%),
+    radial-gradient(1px 1px at 80% 20%, white 40%, transparent 41%),
+    radial-gradient(1px 1px at 50% 70%, white 40%, transparent 41%),
+    radial-gradient(1px 1px at 10% 80%, white 40%, transparent 41%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Header */
+.header {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+.logo {
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: linear-gradient(120deg, var(--accent-moon), var(--accent-nebula));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 25px rgba(123,124,255,0.35);
+}
+
+.tagline {
+  margin-top: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Glass card */
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 1.75rem;
+  box-shadow: 0 0 40px rgba(0,0,0,0.4);
+}
+
+/* Buttons */
+.button {
+  display: inline-block;
+  padding: 0.75rem 1.6rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent-nebula), var(--accent-moon));
+  color: #0a0f2a;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 0 25px rgba(123,124,255,0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(123,124,255,0.7);
+}
+
+/* Sections */
+.section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  color: var(--accent-moon);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Subtle floating animation */
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+.float {
+  animation: float 6s ease-in-out infinite;
+}

@@ -38,9 +38,9 @@ $tagline = "Exploring the night side";
     }
 
     /* --- BADGE STYLES --- */
-    .badge { font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; font-weight: 700; text-transform: uppercase; }
-    .badge-owner { background: rgba(255, 215, 0, 0.2); color: var(--owner-gold); border: 1px solid var(--owner-gold); box-shadow: 0 0 8px rgba(255, 215, 0, 0.3); }
-    .badge-verified { background: rgba(56, 151, 240, 0.2); color: var(--verified-blue); border: 1px solid var(--verified-blue); box-shadow: 0 0 8px rgba(56, 151, 240, 0.3); }
+    .badge { font-size: 0.55rem; padding: 1px 5px; border-radius: 4px; margin-left: 5px; vertical-align: middle; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-owner { background: rgba(255, 215, 0, 0.2); color: var(--owner-gold); border: 1px solid var(--owner-gold); }
+    .badge-verified { background: rgba(56, 151, 240, 0.2); color: var(--verified-blue); border: 1px solid var(--verified-blue); }
 
     /* --- LAYOUT --- */
     main { max-width: 500px; margin: 0 auto; padding: 1rem 1.5rem 8rem; position: relative; z-index: 10; }
@@ -53,13 +53,20 @@ $tagline = "Exploring the night side";
     
     /* --- CHAT OVERLAY --- */
     #chat-overlay { position: fixed; inset: 0; background: var(--bg-primary); z-index: 200; display: none; flex-direction: column; }
-    #chat-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 15px; background: var(--glass-bg); }
-    #chat-messages { flex-grow: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 15px; }
-    .msg-wrapper { display: flex; align-items: flex-end; gap: 10px; width: 100%; }
+    #chat-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 15px; background: var(--glass-bg); backdrop-filter: blur(10px); }
+    #chat-messages { flex-grow: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 20px; }
+    
+    .msg-wrapper { display: flex; align-items: flex-start; gap: 10px; width: 100%; }
     .msg-wrapper.sent { flex-direction: row-reverse; }
-    .bubble { padding: 12px 16px; border-radius: 20px; font-size: 0.9rem; line-height: 1.4; max-width: 75%; }
-    .sent .bubble { background: var(--accent-moon); color: var(--bg-primary); border-bottom-right-radius: 4px; }
-    .received .bubble { background: rgba(255,255,255,0.1); color: #fff; border-bottom-left-radius: 4px; border: 1px solid var(--glass-border); }
+    
+    .chat-pfp { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--glass-border); flex-shrink: 0; }
+    .bubble-container { display: flex; flex-direction: column; max-width: 75%; }
+    .sent .bubble-container { align-items: flex-end; }
+
+    .chat-user-label { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; display: flex; align-items: center; }
+    .bubble { padding: 10px 14px; border-radius: 18px; font-size: 0.9rem; line-height: 1.4; }
+    .sent .bubble { background: var(--accent-moon); color: var(--bg-primary); border-top-right-radius: 4px; }
+    .received .bubble { background: rgba(255,255,255,0.1); color: #fff; border-top-left-radius: 4px; border: 1px solid var(--glass-border); }
 
     /* --- UI ELEMENTS --- */
     input, textarea { width: 100%; padding: 0.8rem; margin-bottom: 0.8rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: #fff; outline: none; box-sizing: border-box; }
@@ -95,7 +102,6 @@ $tagline = "Exploring the night side";
     <div id="auth-view" class="app-section active">
       <div class="card" style="text-align:center;">
         <h2 style="letter-spacing: 4px; margin-bottom: 0.5rem;">LUNARTREV</h2>
-        <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 2rem;">BROADCAST FROM THE DARK SIDE</p>
         <form id="auth-form">
           <input type="text" id="reg-username" placeholder="Pilot Username" required>
           <input type="email" id="email" placeholder="Earth Email" required>
@@ -107,14 +113,8 @@ $tagline = "Exploring the night side";
 
     <div id="home-tab" class="app-section">
       <div id="user-greeting" style="margin-bottom: 1.5rem; padding: 0 0.5rem;">
-        <h1 style="margin: 0; font-size: 1.4rem; letter-spacing: 1px;">
-          Welcome, <span id="greet-name" style="color: var(--accent-nebula); text-shadow: 0 0 10px rgba(165, 180, 252, 0.4);">Explorer</span>
-        </h1>
-        <p style="margin: 4px 0 0; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px;">
-          Logged into LunarTrev System
-        </p>
+        <h1 style="margin: 0; font-size: 1.4rem; letter-spacing: 1px;">Welcome, <span id="greet-name" style="color: var(--accent-nebula);">Explorer</span></h1>
       </div>
-
       <div class="card">
         <textarea id="post-content" placeholder="Broadcast to the moon..." rows="3"></textarea>
         <button id="send-btn" class="button">Transmit</button>
@@ -123,31 +123,19 @@ $tagline = "Exploring the night side";
     </div>
 
     <div id="videos-tab" class="app-section">
-      <div class="card">
-        <input type="text" id="video-url" placeholder="Direct MP4 URL">
-        <input type="text" id="video-desc" placeholder="Video Description">
-        <button id="post-video-btn" class="button">Upload Video</button>
-      </div>
+      <div class="card"><input type="text" id="video-url" placeholder="Video URL"><button id="post-video-btn" class="button">Upload</button></div>
       <div id="video-feed"></div>
     </div>
 
-    <div id="discover-tab" class="app-section">
-      <h3 style="padding-left: 0.5rem; letter-spacing: 2px;">ACTIVE CREW</h3>
-      <div id="crew-list"></div>
-    </div>
+    <div id="discover-tab" class="app-section"><h3>ACTIVE CREW</h3><div id="crew-list"></div></div>
 
     <div id="profile-tab" class="app-section">
       <div class="card" style="text-align:center;">
         <div id="profile-display">
           <img id="my-avatar" class="avatar" style="width:100px; height:100px; margin-bottom:15px; border: 3px solid var(--accent-nebula);" src="">
           <h2 id="disp-name">Pilot</h2>
-          <p id="disp-bio" style="font-style:italic; font-size:0.85rem; color:var(--text-muted); margin-bottom: 20px;"></p>
-          <button onclick="toggleProfileEdit(true)" class="button">Update Mission Log</button>
-        </div>
-        <div id="profile-edit" class="hidden">
-          <input type="text" id="edit-avatar-url" placeholder="Avatar URL">
-          <textarea id="edit-bio" placeholder="Update bio..." rows="3"></textarea>
-          <button id="save-profile-btn" class="button">Save Changes</button>
+          <p id="disp-bio" style="font-style:italic; font-size:0.85rem; color:var(--text-muted);"></p>
+          <button onclick="toggleProfileEdit(true)" class="button">Update mission</button>
         </div>
         <button id="logout-btn" style="margin-top:2rem; background:none; border:1px solid #ff4d4d; color:#ff4d4d; width:100%; cursor:pointer; padding:10px; border-radius:10px;">Logout</button>
       </div>
@@ -166,35 +154,18 @@ $tagline = "Exploring the night side";
     const ctx = canvas.getContext('2d');
     let stars = [];
     function initStars() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         stars = [];
         for (let i = 0; i < 150; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 1.5,
-                opacity: Math.random(),
-                speed: 0.005 + Math.random() * 0.01
-            });
+            stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 1.5, opacity: Math.random(), speed: 0.005 + Math.random() * 0.01 });
         }
     }
     function drawStars() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "white";
-        stars.forEach(s => {
-            s.opacity += s.speed;
-            if (s.opacity > 1 || s.opacity < 0) s.speed *= -1;
-            ctx.globalAlpha = Math.max(0, s.opacity);
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-            ctx.fill();
-        });
-        ctx.globalAlpha = 1;
+        ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = "white";
+        stars.forEach(s => { s.opacity += s.speed; if (s.opacity > 1 || s.opacity < 0) s.speed *= -1; ctx.globalAlpha = Math.max(0, s.opacity); ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill(); });
         requestAnimationFrame(drawStars);
     }
-    window.addEventListener('resize', initStars);
-    initStars(); drawStars();
+    window.addEventListener('resize', initStars); initStars(); drawStars();
   </script>
 
   <script type="module">
@@ -202,21 +173,12 @@ $tagline = "Exploring the night side";
     import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCGTSiMcNQaAVjkEI_9YRbb2C4CTvqQWEM",
-      authDomain: "lunartrev.firebaseapp.com",
-      projectId: "lunartrev",
-      storageBucket: "lunartrev.firebasestorage.app",
-      messagingSenderId: "152908127950",
-      appId: "1:152908127950:web:6db39b55cbe5d5b0f33a9f"
-    };
-
+    const firebaseConfig = { apiKey: "AIzaSyCGTSiMcNQaAVjkEI_9YRbb2C4CTvqQWEM", authDomain: "lunartrev.firebaseapp.com", projectId: "lunartrev", storageBucket: "lunartrev.firebasestorage.app", messagingSenderId: "152908127950", appId: "1:152908127950:web:6db39b55cbe5d5b0f33a9f" };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     let chatListener = null;
 
-    // Helper: Badge Logic
     const getBadgeHTML = (uid) => {
         if (uid === "kAWYdnGnDuYJk9JZYsWZYqRo7ml1") return `<span class="badge badge-owner">Owner</span>`;
         if (uid === "tZkA30TJhCVpQ1dlAukrk6fOvpr2") return `<span class="badge badge-verified">Verified</span>`;
@@ -227,8 +189,7 @@ $tagline = "Exploring the night side";
       document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      const activeNav = document.querySelector(`[data-tab="${id}"]`);
-      if(activeNav) activeNav.classList.add('active');
+      const activeNav = document.querySelector(`[data-tab="${id}"]`); if(activeNav) activeNav.classList.add('active');
     };
     document.querySelectorAll('.nav-item').forEach(i => i.onclick = () => switchTab(i.dataset.tab));
 
@@ -236,7 +197,6 @@ $tagline = "Exploring the night side";
       if (user) {
         document.getElementById('auth-view').classList.remove('active');
         document.getElementById('main-nav').classList.remove('hidden');
-        
         onSnapshot(doc(db, "users", user.uid), (snap) => {
           const d = snap.data();
           if(d) {
@@ -247,13 +207,11 @@ $tagline = "Exploring the night side";
           }
         });
 
-        // Real-time Feed
         onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc")), (snap) => {
           const feed = document.getElementById('lunar-feed'); feed.innerHTML = "";
           snap.forEach(d => {
             const p = d.data();
-            const card = document.createElement('div');
-            card.className = 'card'; card.style.display = 'flex'; card.style.gap = '15px';
+            const card = document.createElement('div'); card.className = 'card'; card.style.display = 'flex'; card.style.gap = '15px';
             card.innerHTML = `<img src="${p.authorImg}" class="avatar" style="width:40px; height:40px;">
               <div><b style="color:var(--accent-nebula); font-size:0.85rem;">${p.authorName}${getBadgeHTML(p.authorId)}</b>
               <p style="margin:5px 0 0; font-size:0.9rem;">${p.text}</p></div>`;
@@ -261,22 +219,18 @@ $tagline = "Exploring the night side";
           });
         });
 
-        // Active Crew List
         onSnapshot(collection(db, "users"), (s) => {
           const list = document.getElementById('crew-list'); list.innerHTML = "";
-          s.forEach(docSnap => {
-            if(docSnap.id !== user.uid) {
-                const u = docSnap.data();
+          s.forEach(ds => {
+            if(ds.id !== user.uid) {
+                const u = ds.data();
                 const div = document.createElement('div'); div.className='card'; div.style.display='flex'; div.style.alignItems='center'; div.style.gap='12px'; div.style.cursor='pointer';
-                div.innerHTML = `<img src="${u.profile_Image}" class="avatar" style="width:35px; height:35px;"> 
-                                 <b style="flex-grow:1;">${u.username}${getBadgeHTML(docSnap.id)}</b> 
-                                 <span class="status-dot ${u.is_online?'':'offline'}"></span>`;
-                div.onclick = () => openChat(docSnap.id, u.username, u.profile_Image);
+                div.innerHTML = `<img src="${u.profile_Image}" class="avatar" style="width:35px; height:35px;"> <b style="flex-grow:1;">${u.username}${getBadgeHTML(ds.id)}</b> <span class="status-dot ${u.is_online?'':'offline'}"></span>`;
+                div.onclick = () => openChat(ds.id, u.username, u.profile_Image);
                 list.appendChild(div);
             }
           });
         });
-
         switchTab('home-tab');
       } else {
         document.getElementById('auth-view').classList.add('active');
@@ -284,37 +238,52 @@ $tagline = "Exploring the night side";
       }
     });
 
-    // Chat Functions
+    // CHAT LOGIC WITH PFP & NAMES & BADGES
     window.openChat = async (targetId, targetName, targetImg) => {
       const u = auth.currentUser;
       const mySnap = await getDoc(doc(db, "users", u.uid));
       const myData = mySnap.data();
       const chatId = [u.uid, targetId].sort().join('_');
+      
       document.getElementById('chat-target-name').innerText = targetName;
       document.getElementById('chat-target-img').src = targetImg;
       document.getElementById('chat-overlay').style.display = 'flex';
+      
       const box = document.getElementById('chat-messages');
       if(chatListener) chatListener();
+      
       const q = query(collection(db, "chats"), where("chatId", "==", chatId), orderBy("timestamp", "asc"));
       chatListener = onSnapshot(q, (snap) => {
         box.innerHTML = "";
         snap.forEach(d => {
-          const m = d.data(); const isMe = m.sender === u.uid;
-          const wrap = document.createElement('div'); wrap.className = `msg-wrapper ${isMe ? 'sent' : 'received'}`;
-          wrap.innerHTML = `<div class="bubble">${m.text}</div>`;
+          const m = d.data(); 
+          const isMe = m.sender === u.uid;
+          const senderName = isMe ? myData.username : targetName;
+          const senderImg = isMe ? myData.profile_Image : targetImg;
+          const senderUid = isMe ? u.uid : targetId;
+          
+          const wrap = document.createElement('div'); 
+          wrap.className = `msg-wrapper ${isMe ? 'sent' : 'received'}`;
+          wrap.innerHTML = `
+            <img src="${senderImg}" class="chat-pfp">
+            <div class="bubble-container">
+              <span class="chat-user-label">${senderName}${getBadgeHTML(senderUid)}</span>
+              <div class="bubble">${m.text}</div>
+            </div>`;
           box.appendChild(wrap);
         });
         box.scrollTop = box.scrollHeight;
       });
+
       document.getElementById('chat-send-btn').onclick = async () => {
         const inp = document.getElementById('chat-input'); if(!inp.value.trim()) return;
         const txt = inp.value; inp.value = "";
         await addDoc(collection(db, "chats"), { chatId, sender: u.uid, text: txt, timestamp: serverTimestamp() });
       };
     };
+
     window.closeChat = () => { document.getElementById('chat-overlay').style.display = 'none'; if(chatListener) chatListener(); };
 
-    // Auth & Actions
     document.getElementById('auth-form').onsubmit = async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value, pass = document.getElementById('password').value, user = document.getElementById('reg-username').value;
@@ -332,8 +301,6 @@ $tagline = "Exploring the night side";
       t.value = "";
     };
 
-    window.toggleProfileEdit = (s) => { document.getElementById('profile-display').classList.toggle('hidden', s); document.getElementById('profile-edit').classList.toggle('hidden', !s); };
-    document.getElementById('save-profile-btn').onclick = async () => { await updateDoc(doc(db, "users", auth.currentUser.uid), { profile_Image: document.getElementById('edit-avatar-url').value, bio: document.getElementById('edit-bio').value }); toggleProfileEdit(false); };
     document.getElementById('logout-btn').onclick = async () => { if(auth.currentUser) await updateDoc(doc(db, "users", auth.currentUser.uid), { is_online: false }); signOut(auth); };
   </script>
 </body>

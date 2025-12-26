@@ -15,9 +15,9 @@ $preview_image = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?a
   <meta name="description" content="<?php echo $description; ?>">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="<LunarTrev>">
-  <meta property="og:description" content="<Welcome to a night social media experience.>">
-  <meta property="og:image" content="<>">
+  <meta property="og:title" content="<?php echo $title; ?> | <?php echo $tagline; ?>">
+  <meta property="og:description" content="<?php echo $description; ?>">
+  <meta property="og:image" content="<?php echo $preview_image; ?>">
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -46,7 +46,7 @@ $preview_image = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?a
     .app-section.active { display: block; }
     .card { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 1.2rem; margin-bottom: 1rem; position: relative; }
     .avatar { width: 48px; height: 48px; border-radius: 50%; background: #111; border: 2px solid var(--glass-border); object-fit: cover; }
-    .badge { font-size: 0.55rem; padding: 2px 8px; border-radius: 4px; margin-left: 5px; font-weight: 700; text-transform: uppercase; border: 1px solid currentColor; display: inline-block; line-height: 1.2; }
+    .badge { font-size: 0.55rem; padding: 2px 8px; border-radius: 4px; margin-left: 5px; font-weight: 700; text-transform: uppercase; border: 1px solid currentColor; display: inline-block; line-height: 1.2; vertical-align: middle; }
     .badge-owner { color: var(--owner-gold); border-color: var(--owner-gold); }
     .timestamp { font-size: 0.6rem; color: var(--text-muted); font-family: monospace; margin-left: 8px; }
 
@@ -159,6 +159,15 @@ $preview_image = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?a
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where, getDocs, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import {  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    // Fixed Import Error above ^
+  </script>
+  
+  <script type="module">
+    // Corrected Script Imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where, getDocs, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyCGTSiMcNQaAVjkEI_9YRbb2C4CTvqQWEM", authDomain: "lunartrev.firebaseapp.com", projectId: "lunartrev", storageBucket: "lunartrev.firebasestorage.app", messagingSenderId: "152908127950", appId: "1:152908127950:web:6db39b55cbe5d5b0f33a9f" };
@@ -190,7 +199,6 @@ $preview_image = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?a
     };
     document.querySelectorAll('.nav-item[data-tab]').forEach(i => i.onclick = () => switchTab(i.dataset.tab));
 
-    // --- CHAT LOGIC RE-FIXED ---
     window.openChat = async (targetId, name, img) => {
       const myId = auth.currentUser.uid;
       const mySnap = await getDoc(doc(db, "users", myId));
@@ -214,7 +222,7 @@ $preview_image = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?a
           div.innerHTML = `
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
               <img src="${isMe ? myData.profile_Image : img}" class="avatar" style="width:20px; height:20px;">
-              <span style="font-size:0.7rem; font-weight:700;">${isMe ? myData.username : name}</span>
+              <span style="font-size:0.7rem; font-weight:700;">${isMe ? myData.username : name}${getBadgeHTML(m.sender)}</span>
             </div>
             <div class="bubble">
               ${m.text}
@@ -248,6 +256,7 @@ $preview_image = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?a
 
         onSnapshot(doc(db, "users", user.uid), (snap) => {
           const d = snap.data(); if(!d) return;
+          // Welcome message fix
           document.getElementById('welcome-text').innerText = `Welcome ${d.username} to LunarTrev`;
           document.getElementById('profile-preview-img').src = d.profile_Image;
           document.getElementById('edit-avatar-url').value = d.profile_Image;

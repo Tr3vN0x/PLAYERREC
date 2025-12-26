@@ -39,8 +39,8 @@ $tagline = "Exploring the night side";
     .badge-owner { color: var(--owner-gold); border-color: var(--owner-gold); }
     .timestamp { font-size: 0.6rem; color: var(--text-muted); font-family: monospace; margin-left: 8px; }
 
-    /* --- POSTS --- */
-    .post-img { width: 100%; border-radius: 16px; margin-top: 10px; border: 1px solid var(--glass-border); display: block; }
+    /* --- POSTS & MEDIA --- */
+    .post-img, .chat-img { width: 100%; border-radius: 16px; margin-top: 10px; border: 1px solid var(--glass-border); display: block; max-height: 300px; object-fit: cover; }
     .delete-btn { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; opacity: 0.5; transition: 0.3s; }
     .delete-btn:hover { color: var(--danger); opacity: 1; }
 
@@ -57,7 +57,7 @@ $tagline = "Exploring the night side";
     .received .bubble { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid var(--glass-border); border-top-left-radius: 4px; }
     .msg-time { font-size: 0.55rem; color: var(--text-muted); margin-top: 5px; font-family: monospace; }
 
-    #chat-input-area { padding: 1rem; display: flex; gap: 10px; background: var(--glass-bg); border-top: 1px solid var(--glass-border); }
+    #chat-input-area { padding: 1rem; display: flex; flex-direction: column; gap: 8px; background: var(--glass-bg); border-top: 1px solid var(--glass-border); }
 
     /* --- FORMS --- */
     input, textarea { width: 100%; padding: 0.8rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: #fff; outline: none; font-family: inherit; box-sizing: border-box; margin-bottom: 0.8rem; }
@@ -82,8 +82,11 @@ $tagline = "Exploring the night side";
     </div>
     <div id="chat-messages"></div>
     <div id="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Secure transmission...">
-      <button id="chat-send-btn" class="button" style="width:80px;">SEND</button>
+      <input type="text" id="chat-img-input" placeholder="Media URL (Optional)" style="margin-bottom:0; font-size: 0.8rem;">
+      <div style="display: flex; gap:10px;">
+        <input type="text" id="chat-input" placeholder="Secure transmission..." style="margin-bottom:0;">
+        <button id="chat-send-btn" class="button" style="width:80px; padding: 0;">SEND</button>
+      </div>
     </div>
   </div>
 
@@ -167,36 +170,26 @@ $tagline = "Exploring the night side";
     };
     document.querySelectorAll('.nav-item[data-tab]').forEach(i => i.onclick = () => switchTab(i.dataset.tab));
 
-    // --- MANAGE POSTS ---
-    window.deletePost = async (postId) => {
-      if(confirm("Permanently delete this transmission?")) {
-        await deleteDoc(doc(db, "posts", postId));
-      }
+    // --- ECHO LOGIC ---
+    window.toggleEcho = async (postId, currentlyEchoed) => {
+      const ref = doc(db, "posts", postId);
+      const uid = auth.currentUser.uid;
+      await updateDoc(ref, { echoes: currentlyEchoed ? arrayRemove(uid) : arrayUnion(uid) });
     };
 
-    // --- POSTING ---
+    window.deletePost = async (id) => { if(confirm("Sever transmission?")) await deleteDoc(doc(db, "posts", id)); };
+
+    // --- BROADCAST ---
     document.getElementById('send-btn').onclick = async () => {
       const text = document.getElementById('post-content').value.trim();
-      const imgUrl = document.getElementById('post-image-url').value.trim();
-      if(!text && !imgUrl) return;
-
-      const uSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
-      const u = uSnap.data();
-
-      await addDoc(collection(db, "posts"), {
-        text,
-        imageUrl: imgUrl,
-        authorId: auth.currentUser.uid,
-        authorName: u.username,
-        authorImg: u.profile_Image,
-        timestamp: serverTimestamp()
-      });
-
-      document.getElementById('post-content').value = "";
-      document.getElementById('post-image-url').value = "";
+      const img = document.getElementById('post-image-url').value.trim();
+      if(!text && !img) return;
+      const u = (await getDoc(doc(db, "users", auth.currentUser.uid))).data();
+      await addDoc(collection(db, "posts"), { text, imageUrl: img, authorId: auth.currentUser.uid, authorName: u.username, authorImg: u.profile_Image, timestamp: serverTimestamp(), echoes: [] });
+      document.getElementById('post-content').value = ""; document.getElementById('post-image-url').value = "";
     };
 
-    // --- CHAT & PROFILE ---
+    // --- CHAT WITH MEDIA ---
     window.openChat = async (targetId, name, img) => {
         const myId = auth.currentUser.uid;
         const myData = (await getDoc(doc(db, "users", myId))).data();
@@ -212,29 +205,33 @@ $tagline = "Exploring the night side";
             snap.forEach(d => {
                 const m = d.data(); const isMe = m.sender === myId;
                 const wrapper = document.createElement('div'); wrapper.className = `msg-wrapper ${isMe ? 'sent' : 'received'}`;
-                wrapper.innerHTML = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;"><img src="${isMe?myData.profile_Image:img}" class="avatar" style="width:22px; height:22px;"><span style="font-size:0.75rem; font-weight:700;">${isMe?myData.username:name}</span>${getBadgeHTML(m.sender)}</div><div class="bubble">${m.text}</div><div class="msg-time">${formatTime(m.timestamp)}</div>`;
+                wrapper.innerHTML = `
+                  <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <img src="${isMe?myData.profile_Image:img}" class="avatar" style="width:22px; height:22px;">
+                    <span style="font-size:0.75rem; font-weight:700;">${isMe?myData.username:name}</span>
+                    ${getBadgeHTML(m.sender)}
+                  </div>
+                  <div class="bubble">
+                    ${m.text}
+                    ${m.media ? `<img src="${m.media}" class="chat-img">` : ''}
+                  </div>
+                  <div class="msg-time">${formatTime(m.timestamp)}</div>`;
                 box.appendChild(wrapper);
             });
             box.scrollTop = box.scrollHeight;
         });
+
         document.getElementById('chat-send-btn').onclick = async () => {
             const inp = document.getElementById('chat-input');
-            if(!inp.value.trim()) return;
-            await addDoc(collection(db, "messages"), { chatId, sender: myId, text: inp.value, timestamp: serverTimestamp() });
-            inp.value = "";
+            const med = document.getElementById('chat-img-input');
+            if(!inp.value.trim() && !med.value.trim()) return;
+            await addDoc(collection(db, "messages"), { chatId, sender: myId, text: inp.value, media: med.value.trim(), timestamp: serverTimestamp() });
+            inp.value = ""; med.value = "";
         };
     };
     window.closeChat = () => { document.getElementById('chat-overlay').style.display = 'none'; };
 
-    document.getElementById('save-profile-btn').onclick = async () => {
-      await updateDoc(doc(db, "users", auth.currentUser.uid), {
-        username: document.getElementById('edit-username').value.trim(),
-        profile_Image: document.getElementById('edit-avatar-url').value.trim(),
-        bio: document.getElementById('edit-bio').value.trim()
-      });
-      alert("Identity Updated.");
-    };
-
+    // --- CORE ---
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         document.getElementById('auth-view').classList.remove('active');
@@ -247,22 +244,21 @@ $tagline = "Exploring the night side";
           document.getElementById('edit-avatar-url').value = d.profile_Image;
           document.getElementById('edit-username').value = d.username;
           document.getElementById('edit-bio').value = d.bio || "";
-
+          
           const crewList = document.getElementById('crew-list'); crewList.innerHTML = "";
           (d.friends || []).forEach(async fid => {
              const u = (await getDoc(doc(db, "users", fid))).data();
              const div = document.createElement('div'); div.className = 'card'; div.style = "display:flex; align-items:center; gap:12px; cursor:pointer;";
-             div.innerHTML = `<img src="${u.profile_Image}" class="avatar" style="width:40px; height:40px;"> <div><b>${u.username}</b>${getBadgeHTML(fid)}<br><small>${u.bio || "Pilot online."}</small></div>`;
+             div.innerHTML = `<img src="${u.profile_Image}" class="avatar" style="width:40px; height:40px;"> <div><b>${u.username}</b>${getBadgeHTML(fid)}<br><small>${u.bio || "Active Pilot."}</small></div>`;
              div.onclick = () => openChat(fid, u.username, u.profile_Image);
              crewList.appendChild(div);
           });
         });
 
-        // LIVE FEED WITH IMAGES & DELETE BUTTON
         onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc")), (snap) => {
           const feed = document.getElementById('lunar-feed'); feed.innerHTML = "";
           snap.forEach(d => {
-            const p = d.data();
+            const p = d.data(); const echoes = p.echoes || []; const isEchoed = echoes.includes(user.uid);
             const canDelete = p.authorId === user.uid || user.uid === ownerId;
             const card = document.createElement('div'); card.className = 'card';
             card.innerHTML = `
@@ -273,21 +269,28 @@ $tagline = "Exploring the night side";
                   <b>${p.authorName}${getBadgeHTML(p.authorId)}<span class="timestamp">${formatTime(p.timestamp)}</span></b>
                   <p style="margin: 5px 0;">${p.text}</p>
                   ${p.imageUrl ? `<img src="${p.imageUrl}" class="post-img">` : ''}
+                  <button onclick="toggleEcho('${d.id}', ${isEchoed})" style="background:none; border:none; color:${isEchoed?'var(--accent-nebula)':'var(--text-muted)'}; cursor:pointer; font-size:0.75rem; margin-top:10px; padding:0;">
+                    ${isEchoed?'★':'☆'} Echo [${echoes.length}]
+                  </button>
                 </div>
               </div>`;
             feed.appendChild(card);
           });
         });
-      } else {
-        document.getElementById('auth-view').classList.add('active');
-        document.getElementById('main-nav').classList.add('hidden');
-      }
+      } else { document.getElementById('auth-view').classList.add('active'); document.getElementById('main-nav').classList.add('hidden'); }
     });
 
-    // Mappings
-    window.auth = auth;
+    // Event Mappings
+    window.toggleEcho = toggleEcho;
     window.deletePost = deletePost;
     window.closeChat = closeChat;
+    window.auth = auth;
+
+    // Background logic
+    const canvas = document.getElementById('starCanvas'); const ctx = canvas.getContext('2d'); let stars = [];
+    const initStars = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; stars = Array.from({length: 200}, () => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: Math.random() * 1.2, o: Math.random() })); };
+    const animateStars = () => { ctx.clearRect(0,0,canvas.width,canvas.height); stars.forEach(s => { s.o += 0.005; ctx.fillStyle = `rgba(240,242,255, ${Math.abs(Math.sin(s.o))})`; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill(); }); requestAnimationFrame(animateStars); };
+    initStars(); animateStars(); window.onresize = initStars;
   </script>
 </body>
 </html>

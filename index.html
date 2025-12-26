@@ -18,6 +18,7 @@ $tagline = "Exploring the night side";
       --text-muted: #848bbd;
       --glass-bg: rgba(13, 19, 45, 0.75);
       --glass-border: rgba(207, 216, 255, 0.15);
+      --online-glow: #00ff88;
     }
 
     body {
@@ -27,64 +28,44 @@ $tagline = "Exploring the night side";
       background-image: radial-gradient(circle at 80% 10%, rgba(207, 216, 255, 0.05) 0%, transparent 50%);
     }
 
-    /* Fixed Cosmic Background */
     .stars { position: fixed; inset: 0; background-image: radial-gradient(1px 1px at 20% 30%, white 80%, transparent 81%), radial-gradient(1.5px 1.5px at 70% 60%, white 80%, transparent 81%); opacity: 0.3; z-index: -2; }
     .moon-orb { position: fixed; top: -60px; right: -60px; width: 300px; height: 300px; background: radial-gradient(circle at 35% 35%, var(--accent-moon) 0%, #475569 100%); border-radius: 50%; box-shadow: 0 0 60px rgba(207, 216, 255, 0.1); z-index: -1; }
 
     main { max-width: 500px; margin: 0 auto; padding: 1rem 1.5rem 8rem; }
-    
     .logo-area { text-align: center; padding: 2rem 0; }
     .logo { font-size: 2.8rem; font-weight: 700; background: linear-gradient(to bottom, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
 
     /* App Sections */
     .app-section { display: none; animation: moonRise 0.4s ease-out; }
     .app-section.active { display: block; }
-
-    @keyframes moonRise {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes moonRise { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
     .card {
       background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border); border-radius: 28px;
-      padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      padding: 1.5rem; margin-bottom: 1.2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
 
-    input, textarea { 
-      width: 100%; padding: 1rem; margin-bottom: 1rem; border-radius: 12px; 
-      border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); 
-      color: #fff; outline: none; box-sizing: border-box; font-family: inherit;
-    }
-    input:focus, textarea:focus { border-color: var(--accent-moon); }
+    /* Avatars & Status */
+    .avatar { width: 45px; height: 45px; border-radius: 50%; background: #222; border: 2px solid var(--glass-border); object-fit: cover; }
+    .status-dot { width: 10px; height: 10px; background: var(--online-glow); border-radius: 50%; display: inline-block; margin-right: 5px; box-shadow: 0 0 8px var(--online-glow); }
+    
+    /* Inputs & Buttons */
+    input, textarea { width: 100%; padding: 1rem; margin-bottom: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: #fff; outline: none; box-sizing: border-box; font-family: inherit; }
+    .button { width: 100%; padding: 1rem; border-radius: 12px; border: none; background: var(--accent-moon); color: var(--bg-primary); font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
-    .button { 
-      width: 100%; padding: 1rem; border-radius: 12px; border: none; 
-      background: var(--accent-moon); color: var(--bg-primary); 
-      font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
-    }
-
-    /* Navigation Bar */
-    .nav-bar {
-      position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-      width: 85%; max-width: 380px;
-      background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(25px);
-      border: 1px solid var(--glass-border); border-radius: 22px;
-      display: flex; justify-content: space-around; padding: 12px;
-      z-index: 100; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-    }
-
-    .nav-item {
-      color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; 
-      letter-spacing: 1.5px; cursor: pointer; transition: 0.3s; opacity: 0.6;
-    }
+    /* Nav */
+    .nav-bar { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 380px; background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 22px; display: flex; justify-content: space-around; padding: 12px; z-index: 100; }
+    .nav-item { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; cursor: pointer; transition: 0.3s; opacity: 0.6; }
     .nav-item.active { color: var(--accent-moon); opacity: 1; font-weight: 700; }
 
-    .hidden { display: none; }
-    .status-msg { font-size: 0.8rem; text-align: center; color: var(--accent-nebula); margin-top: 10px; }
+    /* Post Layout */
+    .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .post-author-info { display: flex; flex-direction: column; }
+    .pulse-btn { background: none; border: 1px solid var(--glass-border); color: var(--accent-nebula); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; margin-top: 10px; transition: 0.3s; }
+    .pulse-btn.active { background: var(--accent-nebula); color: var(--bg-primary); }
 
-    /* Post Styling */
-    .post-meta { font-size: 0.7rem; color: var(--accent-nebula); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -94,26 +75,23 @@ $tagline = "Exploring the night side";
 
   <div class="logo-area">
     <div class="logo">LunarTrev</div>
-    <div style="font-size:0.7rem; color:var(--accent-nebula); letter-spacing:0.3em; text-transform:uppercase;">Deep Space Feed</div>
   </div>
 
   <main>
     <div id="auth-view" class="app-section active">
         <div class="card">
-            <h2 style="margin-top:0; text-align:center;">Initiate Profile</h2>
+            <h2 style="text-align:center;">Initiate Profile</h2>
             <form id="auth-form">
-                <input type="text" id="reg-username" placeholder="Pilot Name">
+                <input type="text" id="reg-username" placeholder="Pilot Name" required>
                 <input type="email" id="email" placeholder="Earth Email" required>
                 <input type="password" id="password" placeholder="Security Key" required>
                 <button type="submit" class="button">Launch Account</button>
             </form>
-            <div id="auth-status" class="status-msg"></div>
         </div>
     </div>
 
     <div id="home-tab" class="app-section">
-      <div class="card" style="padding: 1.5rem;">
-        <h4 style="margin: 0 0 1rem 0; font-size: 0.7rem; color: var(--accent-nebula); letter-spacing: 2px;">NEW TRANSMISSION</h4>
+      <div class="card">
         <textarea id="post-content" placeholder="Broadcast to the sector..." rows="3"></textarea>
         <button id="send-btn" class="button" style="padding: 10px;">Send Pulse</button>
       </div>
@@ -121,17 +99,15 @@ $tagline = "Exploring the night side";
     </div>
 
     <div id="discover-tab" class="app-section">
-      <div class="card">
-        <h3 style="margin-top:0;">Nearby Pilots</h3>
-        <div id="crew-list"><p>Scanning frequencies...</p></div>
-      </div>
+      <h3 style="padding-left:10px;">The Crew</h3>
+      <div id="crew-list"></div>
     </div>
 
     <div id="profile-tab" class="app-section">
-      <div class="card">
-        <h3 style="margin-top:0;">System Data</h3>
-        <p>Pilot: <strong id="disp-name">...</strong></p>
-        <p>Rank: <span id="disp-rank" style="color:var(--accent-nebula);">...</span></p>
+      <div class="card" style="text-align:center;">
+        <img id="my-avatar" class="avatar" style="width:100px; height:100px; margin-bottom:15px;" src="https://api.dicebear.com/7.x/bottts/svg?seed=Lunar">
+        <h2 id="disp-name" style="margin:0;">...</h2>
+        <p id="disp-rank" style="color:var(--accent-nebula);">...</p>
         <button id="logout-btn" style="margin-top:2rem; background:transparent; border:1px solid #ff4d4d; color:#ff4d4d; padding:10px; width:100%; border-radius:10px; cursor:pointer;">Eject Session</button>
       </div>
     </div>
@@ -146,7 +122,7 @@ $tagline = "Exploring the night side";
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCGTSiMcNQaAVjkEI_9YRbb2C4CTvqQWEM",
@@ -161,7 +137,6 @@ $tagline = "Exploring the night side";
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // TAB SYSTEM
     const switchTab = (tabId) => {
       document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -173,84 +148,118 @@ $tagline = "Exploring the night side";
       item.addEventListener('click', () => switchTab(item.getAttribute('data-tab')));
     });
 
-    // AUTH LOGIC
+    // AUTH
     document.getElementById('auth-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const status = document.getElementById('auth-status');
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       const username = document.getElementById('reg-username').value;
+      const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${username}`;
 
       try {
         const userCred = await createUserWithEmailAndPassword(auth, email, password);
         await setDoc(doc(db, "users", userCred.user.uid), {
-          username: username || "Pilot",
-          rank: "Stargazer",
-          joinedAt: serverTimestamp(),
-          bio: "Just landed."
+          username, avatar, rank: "Stargazer", status: "online", joinedAt: serverTimestamp()
         });
       } catch (err) {
-        if (err.code === 'auth/email-already-in-use') {
-          await signInWithEmailAndPassword(auth, email, password);
-        } else { status.innerText = err.message; }
+        if (err.code === 'auth/email-already-in-use') await signInWithEmailAndPassword(auth, email, password);
       }
     });
 
-    // POSTING LOGIC
+    // POSTING
     document.getElementById('send-btn').addEventListener('click', async () => {
       const content = document.getElementById('post-content').value;
       const user = auth.currentUser;
-      const pilotName = document.getElementById('disp-name').innerText;
+      if (!content.trim() || !user) return;
 
-      if (content.trim() === "" || !user) return;
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      const userData = userDoc.data();
 
-      try {
-        await addDoc(collection(db, "posts"), {
-          text: content,
-          authorId: user.uid,
-          authorName: pilotName,
-          timestamp: serverTimestamp()
-        });
-        document.getElementById('post-content').value = "";
-      } catch (err) { console.error(err); }
+      await addDoc(collection(db, "posts"), {
+        text: content,
+        authorId: user.uid,
+        authorName: userData.username,
+        authorAvatar: userData.avatar,
+        likes: [],
+        timestamp: serverTimestamp()
+      });
+      document.getElementById('post-content').value = "";
     });
 
-    // FEED LISTENER
-    const feedQuery = query(collection(db, "posts"), orderBy("timestamp", "desc"));
-    onSnapshot(feedQuery, (snapshot) => {
+    // FEED & PULSE (Like)
+    onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc")), (snapshot) => {
       const feedDiv = document.getElementById('lunar-feed');
       feedDiv.innerHTML = "";
-      snapshot.forEach((doc) => {
-        const post = doc.data();
-        const time = post.timestamp ? new Date(post.timestamp.seconds * 1000).toLocaleTimeString() : "...";
-        feedDiv.innerHTML += `
-          <div class="card" style="padding:1.5rem; margin-bottom:1rem;">
-            <div class="post-meta">${post.authorName} // ${time}</div>
-            <div style="font-size:0.95rem;">${post.text}</div>
+      snapshot.forEach((postDoc) => {
+        const post = postDoc.data();
+        const isLiked = post.likes.includes(auth.currentUser?.uid);
+        
+        const postEl = document.createElement('div');
+        postEl.className = 'card';
+        postEl.innerHTML = `
+          <div class="post-header">
+            <img class="avatar" src="${post.authorAvatar}">
+            <div class="post-author-info">
+              <span style="font-weight:700; font-size:0.9rem;">${post.authorName}</span>
+              <span style="font-size:0.6rem; color:var(--text-muted);">${post.timestamp?.toDate().toLocaleTimeString() || '...'}</span>
+            </div>
+          </div>
+          <div style="font-size:0.95rem;">${post.text}</div>
+          <button class="pulse-btn ${isLiked ? 'active' : ''}" data-id="${postDoc.id}">
+            ${isLiked ? '♥ Pulsed' : '♡ Pulse'} (${post.likes.length})
+          </button>
+        `;
+        
+        postEl.querySelector('.pulse-btn').onclick = async () => {
+          const ref = doc(db, "posts", postDoc.id);
+          await updateDoc(ref, { likes: isLiked ? arrayRemove(auth.currentUser.uid) : arrayUnion(auth.currentUser.uid) });
+        };
+        feedDiv.appendChild(postEl);
+      });
+    });
+
+    // CREW LIST (Status)
+    onSnapshot(collection(db, "users"), (snapshot) => {
+      const crewList = document.getElementById('crew-list');
+      crewList.innerHTML = "";
+      snapshot.forEach((uDoc) => {
+        const u = uDoc.data();
+        crewList.innerHTML += `
+          <div class="card" style="display:flex; align-items:center; gap:15px; padding:1rem;">
+            <img class="avatar" src="${u.avatar}">
+            <div style="flex:1">
+              <div style="font-weight:600;">${u.username}</div>
+              <div style="font-size:0.7rem; color:var(--text-muted);">${u.rank}</div>
+            </div>
+            <div class="status-dot"></div>
           </div>`;
       });
     });
 
-    // SESSION OBSERVER
     onAuthStateChanged(auth, async (user) => {
-      const authView = document.getElementById('auth-view');
       const nav = document.getElementById('main-nav');
       if (user) {
-        authView.classList.remove('active');
+        document.getElementById('auth-view').classList.remove('active');
         nav.classList.remove('hidden');
         switchTab('home-tab');
         const snap = await getDoc(doc(db, "users", user.uid));
         if (snap.exists()) {
-          document.getElementById('disp-name').innerText = snap.data().username;
-          document.getElementById('disp-rank').innerText = snap.data().rank;
+          const data = snap.data();
+          document.getElementById('disp-name').innerText = data.username;
+          document.getElementById('disp-rank').innerText = data.rank;
+          document.getElementById('my-avatar').src = data.avatar;
+          await updateDoc(doc(db, "users", user.uid), { status: "online" });
         }
       } else {
-        authView.classList.add('active');
+        document.getElementById('auth-view').classList.add('active');
         nav.classList.add('hidden');
       }
     });
 
-    document.getElementById('logout-btn').onclick = () => signOut(auth);
+    document.getElementById('logout-btn').onclick = async () => {
+      await updateDoc(doc(db, "users", auth.currentUser.uid), { status: "offline" });
+      signOut(auth);
+    };
   </script>
 </body>
 </html>

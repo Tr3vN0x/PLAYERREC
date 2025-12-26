@@ -1,4 +1,3 @@
-
 <?php
 $title = "LunarTrev";
 $tagline = "Exploring the night side";
@@ -50,8 +49,7 @@ $tagline = "Exploring the night side";
 
     input, textarea { width: 100%; padding: 1rem; margin-bottom: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: #fff; outline: none; box-sizing: border-box; font-family: inherit; resize: none; }
     .button { width: 100%; padding: 1rem; border-radius: 12px; border: none; background: var(--accent-moon); color: var(--bg-primary); font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-    .button:hover { opacity: 0.9; transform: translateY(-2px); }
-
+    
     .nav-bar { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 380px; background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 22px; display: flex; justify-content: space-around; padding: 12px; z-index: 100; }
     .nav-item { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; cursor: pointer; transition: 0.3s; opacity: 0.6; }
     .nav-item.active { color: var(--accent-moon); opacity: 1; font-weight: 700; }
@@ -64,7 +62,7 @@ $tagline = "Exploring the night side";
     .pulse-btn { background: none; border: 1px solid var(--glass-border); color: var(--accent-nebula); padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; margin-top: 10px; transition: 0.2s; }
     .pulse-btn.active { background: var(--accent-moon); color: var(--bg-primary); border-color: var(--accent-moon); }
 
-    .edit-link { font-size: 0.65rem; color: var(--accent-nebula); cursor: pointer; text-decoration: underline; opacity: 0.8; }
+    .edit-link { font-size: 0.65rem; color: var(--accent-nebula); cursor: pointer; text-decoration: underline; opacity: 0.8; margin-left: 8px; }
     .edit-area { background: rgba(255,255,255,0.05); border: 1px solid var(--accent-nebula); color: #fff; margin: 10px 0; padding: 10px; border-radius: 8px; width: 100%; box-sizing: border-box; font-family: inherit; }
     .btn-group { display: flex; gap: 8px; }
     
@@ -99,29 +97,28 @@ $tagline = "Exploring the night side";
     </div>
 
     <div id="discover-tab" class="app-section">
-      <h3 style="margin-bottom:1rem; padding-left:10px;">Nearby Signals</h3>
+      <h3 style="margin-bottom:1rem; padding-left:10px;">Your Crew</h3>
       <div id="crew-list"></div>
     </div>
 
     <div id="profile-tab" class="app-section">
       <div class="card" style="text-align:center;">
-        
         <div id="profile-display">
           <img id="my-avatar" class="avatar" style="width:100px; height:100px; margin-bottom:15px;" src="">
           <h2 id="disp-name" style="margin:0;">Pilot</h2>
           <div id="disp-rank" class="rank-badge">RANK 1</div>
-          <p id="disp-coords" style="font-size:0.7rem; color:var(--accent-nebula); margin: 10px 0;">SCANNING COORDINATES...</p>
+          <p id="disp-coords" style="font-size:0.7rem; color:var(--accent-nebula); margin: 10px 0;">0.00° N, 0.00° E</p>
           <p id="disp-bio" style="font-style:italic; font-size:0.85rem; color:var(--text-muted); margin-bottom: 20px;"></p>
-          <button onclick="toggleProfileEdit(true)" class="pulse-btn" style="width:100%;">Edit Profile</button>
+          <button onclick="toggleProfileEdit(true)" class="pulse-btn" style="width:100%;">Update Mission Log</button>
         </div>
 
         <div id="profile-edit" class="hidden">
-          <h3 style="margin-top:0;">Update Profile</h3>
-          <input type="text" id="edit-avatar-url" placeholder="Avatar URL (Image Link)">
-          <textarea id="edit-bio" placeholder="Update your mission log..." rows="3"></textarea>
+          <h3 style="margin-top:0;">Update Credentials</h3>
+          <input type="text" id="edit-avatar-url" placeholder="Avatar Image URL">
+          <textarea id="edit-bio" placeholder="Update bio..." rows="3"></textarea>
           <div class="btn-group">
             <button id="save-profile-btn" class="button" style="flex:2;">Save</button>
-            <button onclick="toggleProfileEdit(false)" class="button" style="flex:1; background:transparent; border:1px solid var(--glass-border); color:white;">Cancel</button>
+            <button onclick="toggleProfileEdit(false)" class="button" style="flex:1; background:transparent; border:1px solid var(--glass-border); color:white;">Back</button>
           </div>
         </div>
 
@@ -154,7 +151,7 @@ $tagline = "Exploring the night side";
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // --- Navigation Logic ---
+    // Navigation Logic
     const switchTab = (tabId) => {
       document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -167,18 +164,31 @@ $tagline = "Exploring the night side";
       item.addEventListener('click', () => switchTab(item.getAttribute('data-tab')));
     });
 
-    // --- Auth Actions ---
+    // Geolocation Sync
+    const updatePilotLocation = async (uid) => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          try {
+            await updateDoc(doc(db, "users", uid), { coordinates: new GeoPoint(lat, lng) });
+            document.getElementById('disp-coords').innerText = `${lat.toFixed(2)}° N, ${lng.toFixed(2)}° E`;
+          } catch (e) {}
+        });
+      }
+    };
+
+    // Auth logic
     document.getElementById('auth-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       const username = document.getElementById('reg-username').value;
-      
       try {
         const userCred = await createUserWithEmailAndPassword(auth, email, password);
         await setDoc(doc(db, "users", userCred.user.uid), {
           username: username,
-          bio: "Exploration log started.",
+          bio: "Pilot active.",
           coordinates: new GeoPoint(0, 0),
           friends: [],
           is_online: true,
@@ -188,155 +198,124 @@ $tagline = "Exploring the night side";
         });
       } catch (err) {
         if (err.code === 'auth/email-already-in-use') await signInWithEmailAndPassword(auth, email, password);
-        else alert(err.message);
       }
     });
 
-    // --- Feed Logic ---
+    // Feed / Posting
     document.getElementById('send-btn').addEventListener('click', async () => {
       const content = document.getElementById('post-content').value;
       const user = auth.currentUser;
       if (!content.trim() || !user) return;
-
-      const userSnap = await getDoc(doc(db, "users", user.uid));
-      const u = userSnap.data();
-
+      const uSnap = await getDoc(doc(db, "users", user.uid));
+      const u = uSnap.data();
+      const loc = u.coordinates ? `${u.coordinates.latitude.toFixed(2)}° N, ${u.coordinates.longitude.toFixed(2)}° E` : "Unknown Sector";
+      
       await addDoc(collection(db, "posts"), {
         text: content,
         authorId: user.uid,
         authorName: u.username ?? "Pilot",
         authorImg: u.profile_Image ?? "",
-        authorLoc: u.coordinates ? `${u.coordinates.latitude.toFixed(2)}° N, ${u.coordinates.longitude.toFixed(2)}° E` : "Moon",
+        authorLoc: loc,
         likes: [],
         timestamp: serverTimestamp()
       });
       document.getElementById('post-content').value = "";
     });
 
-    onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc")), (snapshot) => {
-      const feedDiv = document.getElementById('lunar-feed');
-      feedDiv.innerHTML = "";
-      snapshot.forEach((pDoc) => {
+    onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc")), (snap) => {
+      const feed = document.getElementById('lunar-feed');
+      feed.innerHTML = "";
+      snap.forEach((pDoc) => {
         const p = pDoc.data();
         const pid = pDoc.id;
         const isOwner = auth.currentUser?.uid === p.authorId;
-        const likes = p.likes ?? [];
-        const isLiked = likes.includes(auth.currentUser?.uid);
-        const timeStr = p.timestamp ? p.timestamp.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "...";
-        
+        const timeStr = p.timestamp ? p.timestamp.toDate().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "...";
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
           <div class="post-header">
-            <img class="avatar" src="${p.authorImg || 'https://api.dicebear.com/7.x/bottts/svg?seed=Lunar'}">
+            <img class="avatar" src="${p.authorImg}">
             <div class="post-info">
               <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span class="post-username">${p.authorName ?? 'Pilot'}</span>
-                ${isOwner ? `<span class="edit-link" onclick="toggleEdit('${pid}')">Modify</span>` : ''}
+                <span class="post-username">${p.authorName}</span>
+                <div>
+                  ${isOwner ? `<span class="edit-link" onclick="toggleEdit('${pid}')">Modify</span>` : `<span class="edit-link" onclick="addFriend('${p.authorId}')">Add Crew</span>`}
+                </div>
               </div>
-              <span class="post-meta">${p.authorLoc ?? 'Moon'} • ${timeStr}</span>
+              <span class="post-meta">${p.authorLoc} • ${timeStr}</span>
             </div>
           </div>
-          <div id="text-${pid}" style="font-size:0.9rem; line-height:1.5;">${p.text}</div>
+          <div id="text-${pid}">${p.text}</div>
           <div id="edit-box-${pid}" class="hidden">
-            <textarea id="input-${pid}" class="edit-area" rows="3">${p.text}</textarea>
-            <div class="btn-group">
-               <button class="pulse-btn active" onclick="saveEdit('${pid}')">Update</button>
-               <button class="pulse-btn" onclick="toggleEdit('${pid}')">Cancel</button>
-            </div>
+            <textarea id="input-${pid}" class="edit-area">${p.text}</textarea>
+            <button class="pulse-btn active" onclick="saveEdit('${pid}')">Update</button>
           </div>
-          <button class="pulse-btn like-trigger ${isLiked ? 'active' : ''}">Pulse (${likes.length})</button>
+          <button class="pulse-btn ${p.likes.includes(auth.currentUser?.uid) ? 'active' : ''}" onclick="toggleLike('${pid}')">Pulse (${p.likes.length})</button>
         `;
-
-        card.querySelector('.like-trigger').onclick = () => {
-          updateDoc(doc(db, "posts", pid), { 
-            likes: isLiked ? arrayRemove(auth.currentUser.uid) : arrayUnion(auth.currentUser.uid) 
-          });
-        };
-        feedDiv.appendChild(card);
+        feed.appendChild(card);
       });
     });
 
-    // --- Profile Editing Logic ---
-    window.toggleProfileEdit = (isEditing) => {
-      const viewDiv = document.getElementById('profile-display');
-      const editDiv = document.getElementById('profile-edit');
-      if (isEditing) {
-        viewDiv.classList.add('hidden');
-        editDiv.classList.remove('hidden');
-        document.getElementById('edit-avatar-url').value = document.getElementById('my-avatar').src;
-        document.getElementById('edit-bio').value = document.getElementById('disp-bio').innerText;
-      } else {
-        viewDiv.classList.remove('hidden');
-        editDiv.classList.add('hidden');
-      }
-    };
-
-    document.getElementById('save-profile-btn').addEventListener('click', async () => {
-      const user = auth.currentUser;
-      const newAvatar = document.getElementById('edit-avatar-url').value;
-      const newBio = document.getElementById('edit-bio').value;
-      if (!user) return;
-
-      try {
-        await updateDoc(doc(db, "users", user.uid), {
-          profile_Image: newAvatar,
-          bio: newBio
+    // Crew List (Friends Only)
+    const syncCrewList = (userData) => {
+      const list = document.getElementById('crew-list');
+      const friends = userData.friends || [];
+      if (friends.length === 0) { list.innerHTML = "<p style='text-align:center; opacity:0.5;'>Crew empty. Find pilots in the feed.</p>"; return; }
+      
+      onSnapshot(collection(db, "users"), (snap) => {
+        list.innerHTML = "";
+        snap.forEach(uDoc => {
+          if (friends.includes(uDoc.id)) {
+            const u = uDoc.data();
+            list.innerHTML += `<div class="card" style="display:flex; align-items:center; gap:12px;">
+              <img class="avatar" src="${u.profile_Image}">
+              <div style="flex-grow:1;"><div style="font-weight:600;">${u.username}</div><div style="font-size:0.6rem;">RANK ${u.rank_level}</div></div>
+              <div class="status-dot ${u.is_online ? '' : 'offline'}"></div>
+            </div>`;
+          }
         });
-        // UI updates via the Auth Observer automatically or manually:
-        document.getElementById('my-avatar').src = newAvatar;
-        document.getElementById('disp-bio').innerText = newBio;
-        toggleProfileEdit(false);
-      } catch (e) {
-        alert("Sync error.");
-      }
-    });
-
-    // --- Global Helpers ---
-    window.toggleEdit = (id) => {
-      document.getElementById(`text-${id}`).classList.toggle('hidden');
-      document.getElementById(`edit-box-${id}`).classList.toggle('hidden');
-    };
-
-    window.saveEdit = async (id) => {
-      const newText = document.getElementById(`input-${id}`).value;
-      if(!newText.trim()) return;
-      await updateDoc(doc(db, "posts", id), { text: newText });
-    };
-
-    // --- Crew & Auth Observer ---
-    onSnapshot(collection(db, "users"), (snapshot) => {
-      const crewList = document.getElementById('crew-list');
-      crewList.innerHTML = "";
-      snapshot.forEach((uDoc) => {
-        const u = uDoc.data();
-        crewList.innerHTML += `
-          <div class="card" style="display:flex; align-items:center; gap:12px; padding:1rem;">
-            <img class="avatar" src="${u.profile_Image || ''}">
-            <div style="flex-grow:1;">
-              <div style="font-weight:600; font-size:0.9rem;">${u.username ?? 'Unknown'}</div>
-              <div style="font-size:0.6rem; color:var(--text-muted);">RANK ${u.rank_level ?? 1}</div>
-            </div>
-            <div class="status-dot ${u.is_online ? '' : 'offline'}"></div>
-          </div>`;
       });
-    });
+    };
 
+    // Global Window Functions
+    window.toggleEdit = (id) => { document.getElementById(`text-${id}`).classList.toggle('hidden'); document.getElementById(`edit-box-${id}`).classList.toggle('hidden'); };
+    window.saveEdit = async (id) => { const txt = document.getElementById(`input-${id}`).value; await updateDoc(doc(db, "posts", id), { text: txt }); toggleEdit(id); };
+    window.toggleLike = async (id) => {
+      const pRef = doc(db, "posts", id);
+      const snap = await getDoc(pRef);
+      const likes = snap.data().likes || [];
+      const uid = auth.currentUser.uid;
+      await updateDoc(pRef, { likes: likes.includes(uid) ? arrayRemove(uid) : arrayUnion(uid) });
+    };
+    window.addFriend = async (target) => {
+      await updateDoc(doc(db, "users", auth.currentUser.uid), { friends: arrayUnion(target) });
+      const snap = await getDoc(doc(db, "users", auth.currentUser.uid));
+      syncCrewList(snap.data());
+    };
+    window.toggleProfileEdit = (show) => { document.getElementById('profile-display').classList.toggle('hidden', show); document.getElementById('profile-edit').classList.toggle('hidden', !show); };
+
+    document.getElementById('save-profile-btn').onclick = async () => {
+      const avatar = document.getElementById('edit-avatar-url').value;
+      const bio = document.getElementById('edit-bio').value;
+      await updateDoc(doc(db, "users", auth.currentUser.uid), { profile_Image: avatar, bio: bio });
+      window.location.reload(); // Quick sync
+    };
+
+    // Auth Observer
     onAuthStateChanged(auth, async (user) => {
       const nav = document.getElementById('main-nav');
       if (user) {
         document.getElementById('auth-view').classList.remove('active');
         nav.classList.remove('hidden');
-        switchTab('home-tab');
-        
         const snap = await getDoc(doc(db, "users", user.uid));
         if (snap.exists()) {
           const d = snap.data();
-          document.getElementById('disp-name').innerText = d.username ?? "Pilot";
-          document.getElementById('disp-bio').innerText = d.bio ?? "";
-          document.getElementById('my-avatar').src = d.profile_Image ?? "";
-          document.getElementById('disp-rank').innerText = `RANK ${d.rank_level ?? 1}`;
-          if(d.coordinates) document.getElementById('disp-coords').innerText = `${d.coordinates.latitude.toFixed(2)}° N, ${d.coordinates.longitude.toFixed(2)}° E`;
+          document.getElementById('disp-name').innerText = d.username;
+          document.getElementById('disp-bio').innerText = d.bio;
+          document.getElementById('my-avatar').src = d.profile_Image;
+          document.getElementById('disp-rank').innerText = `RANK ${d.rank_level}`;
+          syncCrewList(d);
+          updatePilotLocation(user.uid);
           await updateDoc(doc(db, "users", user.uid), { is_online: true });
         }
       } else {
@@ -346,10 +325,8 @@ $tagline = "Exploring the night side";
     });
 
     document.getElementById('logout-btn').onclick = async () => {
-      if(auth.currentUser) {
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { is_online: false });
-        signOut(auth);
-      }
+      await updateDoc(doc(db, "users", auth.currentUser.uid), { is_online: false });
+      signOut(auth);
     };
   </script>
 </body>

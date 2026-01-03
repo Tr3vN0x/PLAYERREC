@@ -39,13 +39,12 @@ $tagline = "Metaverse Social Hub";
 
     /* --- AVATAR PREVIEW --- */
     .avatar-ring {
-      width: 90px; height: 90px; border-radius: 22px;
+      width: 100px; height: 100px; border-radius: 25px;
       background: linear-gradient(45deg, var(--roblox-blue), var(--roblox-purple));
-      padding: 3px; margin: 0 auto 15px; display: flex;
+      padding: 4px; margin: 0 auto 15px; display: flex;
     }
-    .avatar { width: 100%; height: 100%; border-radius: 19px; object-fit: cover; background: #1a1a1a; }
+    .avatar { width: 100%; height: 100%; border-radius: 21px; object-fit: cover; background: #1a1a1a; }
 
-    /* --- INPUTS & UI --- */
     .input-group { margin-bottom: 15px; position: relative; }
     label { display: block; font-size: 0.7rem; font-weight: 800; color: var(--roblox-blue); margin-bottom: 5px; text-transform: uppercase; }
     
@@ -54,18 +53,12 @@ $tagline = "Metaverse Social Hub";
       background: rgba(0,0,0,0.5); color: #fff; font-size: 1rem; outline: none;
     }
 
-    .refresh-btn {
-      position: absolute; right: 10px; top: 30px; background: none; border: none; 
-      color: var(--roblox-blue); cursor: pointer; font-weight: bold; font-size: 0.8rem;
-    }
-
     .btn {
       width: 100%; padding: 16px; border-radius: 12px; border: none;
       background: linear-gradient(90deg, var(--roblox-blue), var(--roblox-purple));
       color: white; font-weight: 800; cursor: pointer; text-transform: uppercase;
     }
 
-    /* --- APP NAVIGATION --- */
     .nav {
       position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
       width: 90%; max-width: 400px; background: rgba(15, 15, 30, 0.95);
@@ -73,8 +66,7 @@ $tagline = "Metaverse Social Hub";
       display: none; justify-content: space-around; padding: 15px; z-index: 1000;
     }
     .nav-item { color: var(--text-muted); font-size: 0.8rem; font-weight: 800; cursor: pointer; }
-    .nav-item.active { color: var(--roblox-blue); }
-
+    
     .app-section { display: none; }
     .app-section.active { display: block; }
   </style>
@@ -88,13 +80,12 @@ $tagline = "Metaverse Social Hub";
             <div class="avatar-ring">
                 <img id="avatar-preview" src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=blox" class="avatar">
             </div>
-            <p id="preview-status" style="text-align:center; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 20px;">Ready to Spawn</p>
+            <p id="preview-status" style="text-align:center; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 20px;">Ready to Scan</p>
 
             <form id="auth-form">
                 <div class="input-group">
                     <label>Roblox Username</label>
-                    <input type="text" id="reg-username" placeholder="Enter Username" required>
-                    <button type="button" class="refresh-btn" id="check-user">CHECK</button>
+                    <input type="text" id="reg-username" placeholder="Type name then wait..." required autocomplete="off">
                 </div>
                 <div class="input-group">
                     <label>Email</label>
@@ -142,38 +133,54 @@ $tagline = "Metaverse Social Hub";
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // --- RELIABLE AVATAR SEARCH ---
-    async function syncAvatar() {
-        const name = document.getElementById('reg-username').value.trim();
+    // --- NEW FALLBACK AVATAR ENGINE ---
+    let searchTimer;
+    document.getElementById('reg-username').addEventListener('input', (e) => {
+        const name = e.target.value.trim();
         const img = document.getElementById('avatar-preview');
         const status = document.getElementById('preview-status');
-
-        if(!name) return;
-        status.innerText = "Searching Roblox...";
         
-        try {
-            // Using a redundant proxy approach for stability
-            const proxy = "https://api.allorigins.win/raw?url=";
-            const target = encodeURIComponent(`https://www.roblox.com/search/users/results?keyword=${name}&maxRows=1`);
-            const res = await fetch(proxy + target);
-            const data = await res.json();
+        clearTimeout(searchTimer);
+        if(!name) return;
 
-            if(data.UserSearchResults && data.UserSearchResults.length > 0) {
-                const id = data.UserSearchResults[0].UserId;
-                img.src = `https://www.roblox.com/headshot-thumbnail/image?userId=${id}&width=150&height=150&format=png`;
-                status.innerText = "Avatar Synced!";
-                status.style.color = "var(--roblox-blue)";
-            } else {
-                throw new Error();
+        status.innerText = "Scanning Roblox...";
+        status.style.color = "var(--roblox-blue)";
+
+        searchTimer = setTimeout(async () => {
+            const proxies = [
+                "https://api.allorigins.win/raw?url=",
+                "https://corsproxy.io/?"
+            ];
+
+            let found = false;
+            for(let proxy of proxies) {
+                try {
+                    // Try the POST endpoint for User IDs (More stable)
+                    const res = await fetch(proxy + encodeURIComponent("https://users.roblox.com/v1/usernames/users"), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ usernames: [name], excludeBannedUsers: true })
+                    });
+                    const data = await res.json();
+                    
+                    if(data.data && data.data.length > 0) {
+                        const id = data.data[0].id;
+                        img.src = `https://www.roblox.com/headshot-thumbnail/image?userId=${id}&width=150&height=150&format=png`;
+                        status.innerText = "Avatar Found!";
+                        status.style.color = "#00ff88";
+                        found = true;
+                        break;
+                    }
+                } catch(err) { console.warn("Proxy failed, trying next..."); }
             }
-        } catch(e) {
-            img.src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${name}`;
-            status.innerText = "Guest Mode (User not found)";
-            status.style.color = "#ff4d4d";
-        }
-    }
 
-    document.getElementById('check-user').onclick = syncAvatar;
+            if(!found) {
+                img.src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${name}`;
+                status.innerText = "Guest Mode (API Busy)";
+                status.style.color = "var(--text-muted)";
+            }
+        }, 1000); // 1 second delay to ensure typing is done
+    });
 
     // --- AUTHENTICATION ---
     document.getElementById('auth-form').onsubmit = async (e) => {
@@ -187,7 +194,7 @@ $tagline = "Metaverse Social Hub";
             const cred = await createUserWithEmailAndPassword(auth, email, pass);
             await setDoc(doc(db, "users", cred.user.uid), { username: user, profile_Image: pfp });
         } catch {
-            signInWithEmailAndPassword(auth, email, pass).catch(() => alert("Error logging in."));
+            signInWithEmailAndPassword(auth, email, pass).catch(() => alert("Access Key Incorrect."));
         }
     };
 
@@ -211,8 +218,8 @@ $tagline = "Metaverse Social Hub";
                 snap.forEach(d => {
                     const p = d.data();
                     feed.innerHTML += `
-                        <div class="card" style="padding: 1rem; display: flex; gap: 12px; margin-bottom: 10px;">
-                            <div class="avatar-ring" style="width:45px; height:45px; margin:0;"><img src="${p.authorImg}" class="avatar"></div>
+                        <div class="card" style="padding: 1rem; display: flex; gap: 12px; margin-bottom: 10px; align-items: center;">
+                            <div class="avatar-ring" style="width:50px; height:50px; margin:0;"><img src="${p.authorImg}" class="avatar"></div>
                             <div style="flex:1;">
                                 <div style="font-weight:800; color:var(--roblox-blue); font-size:0.8rem;">${p.authorName}</div>
                                 <div style="font-size:0.9rem; color:#eee;">${p.text}</div>

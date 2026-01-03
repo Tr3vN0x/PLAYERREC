@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trevor | Full Profile</title>
+    <title>Trevor | PLAYERREC Profile</title>
     
-    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/96/controller.png">
+    <link rel="icon" type="image/png" href="https://files.oaiusercontent.com/file-F9X6676C7DCA6A6D6C65726563?se=2026-01-03T15%3A01%3A40Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Dplayerrec_logo.png&sig=abc123yourgeneratedlink">
+    
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -28,26 +29,42 @@
             line-height: 1.6;
         }
 
+        /* Nav with New Logo */
         header {
             background: #000;
             border-bottom: 2px solid var(--accent);
-            padding: 15px 5%;
+            padding: 10px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 0 20px rgba(255, 70, 85, 0.2);
         }
 
-        .logo {
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo-img {
+            height: 45px;
+            width: 45px;
+            border-radius: 4px;
+            border: 1px solid var(--accent);
+        }
+
+        .logo-text {
             font-family: 'Rajdhani', sans-serif;
             font-weight: 700;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        .logo span { color: var(--accent); }
+        .logo-text span { color: var(--accent); }
 
         .main-layout {
             max-width: 1100px;
@@ -58,32 +75,23 @@
             gap: 40px;
         }
 
-        /* Full Size Image Container */
-        .slideshow-wrapper {
-            margin-bottom: 30px;
-            position: relative;
-        }
-
         .slideshow-container {
             width: 100%;
-            /* Vertical ratio to show full portrait images */
             aspect-ratio: 3 / 4; 
             background: #1a1a1f;
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border);
-            box-shadow: 0 0 30px rgba(255, 70, 85, 0.15);
+            position: relative;
+            box-shadow: 0 0 30px rgba(255, 70, 85, 0.1);
         }
 
         .slide {
             position: absolute;
-            width: 100%; 
-            height: 100%;
+            width: 100%; height: 100%;
             opacity: 0;
             transition: opacity 0.8s ease-in-out;
-            /* "Contain" ensures the whole image is visible without cropping */
-            object-fit: cover; 
-            background-color: #000;
+            object-fit: cover;
         }
 
         .slide.active { opacity: 1; }
@@ -105,15 +113,6 @@
             display: inline-block;
         }
 
-        .article-content {
-            font-size: 1.1rem;
-            color: var(--text-dim);
-            margin-bottom: 40px;
-        }
-
-        .article-content b { color: #fff; }
-
-        /* Sidebar Widgets */
         .widget {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -155,45 +154,42 @@
             transition: 0.3s;
         }
 
-        .social-link:hover {
-            background: var(--accent);
-        }
+        .social-link:hover { background: var(--accent); }
 
         @media (max-width: 850px) {
             .main-layout { grid-template-columns: 1fr; }
-            .slideshow-container { aspect-ratio: 4 / 5; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">PLAYER<span>REC</span></div>
-    <div style="font-size: 0.7rem; font-weight: 800; letter-spacing: 1px;">[ EST. 2026 ]</div>
+    <div class="logo-container">
+        <img src="https://input-image-url.com/playerrec-logo.png" alt="PLAYERREC" class="nav-logo-img">
+        <div class="logo-text">PLAYER<span>REC</span></div>
+    </div>
+    <div style="font-size: 0.7rem; font-weight: 800; color: var(--accent); border: 1px solid var(--accent); padding: 2px 8px;">VERIFIED PROFILE</div>
 </header>
 
 <div class="main-layout">
     <div class="main-content">
-        <span class="lfg-badge">SEARCHING FOR PEERS</span>
-        <h1>USA Creator Trevor Opens Recruitment for New Gaming Circle</h1>
+        <span class="lfg-badge">OPEN RECRUITMENT</span>
+        <h1>Player Spotlight: Trevor (USA) Looking for New Peers</h1>
         
-        <div class="slideshow-wrapper">
-            <div class="slideshow-container">
-                <img class="slide active" src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/607266518_858006396834394_2937293459458675257_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=zfJdBWwtNf0Q7kNvwEYhmbO&_nc_oc=AdnSqpZcwrvGNIQryT8jDuMmwLKrKk_UhZdNXnf2Ia_NATe_NFAMm3uTtuKONwdCV5n-Hcu3tndHWpub4x3JZvvO&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=VkydFUI7FCLU6yaafvskkg&oh=00_AfoyW_pNy_nww5PcfOa7vUEGxhyg4yN8gXD0949whCua7A&oe=695EDEBA">
-                <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/605515347_854878180480549_1183865267160028360_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=99g3IsUrNGIQ7kNvwGGGrTv&_nc_oc=Adk0KUkDIki5mm8_Z6dFEFhGdvHa1ntbWQE9NtZbl7GumvniHvEuj6MExVtf4tLV6j5m7U67VxVBV41xw5n-fGQq&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=E6-NbxyQ_6uhgib_vAzLBA&oh=00_AfrXkccvGodAdrfV5TNuR636_nwneNGbiYI1qNYfWVHJVg&oe=695F09D2">
-                <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/603064841_852513910716976_4597644483104201818_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=4seOd34VZeQQ7kNvwGIRuni&_nc_oc=AdlpLnhEXkeZ-gKItexDLXW0PF8F8ZydUDi9eITvONKX3K17Iv9Mxbs4soP8cN_oqRYty5YgzJnltdFC3VaMahYC&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=4hoNVsvVrcmcLMVXzAYJjw&oh=00_AfrVfFmly_3x1HPb7kSGJPpduYHTjje2YYyRHlx7DKgG7A&oe=695EF199">
-            </div>
+        <div class="slideshow-container">
+            <img class="slide active" src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/607266518_858006396834394_2937293459458675257_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=zfJdBWwtNf0Q7kNvwEYhmbO&_nc_oc=AdnSqpZcwrvGNIQryT8jDuMmwLKrKk_UhZdNXnf2Ia_NATe_NFAMm3uTtuKONwdCV5n-Hcu3tndHWpub4x3JZvvO&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=VkydFUI7FCLU6yaafvskkg&oh=00_AfoyW_pNy_nww5PcfOa7vUEGxhyg4yN8gXD0949whCua7A&oe=695EDEBA">
+            <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/605515347_854878180480549_1183865267160028360_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=99g3IsUrNGIQ7kNvwGGGrTv&_nc_oc=Adk0KUkDIki5mm8_Z6dFEFhGdvHa1ntbWQE9NtZbl7GumvniHvEuj6MExVtf4tLV6j5m7U67VxVBV41xw5n-fGQq&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=E6-NbxyQ_6uhgib_vAzLBA&oh=00_AfrXkccvGodAdrfV5TNuR636_nwneNGbiYI1qNYfWVHJVg&oe=695F09D2">
+            <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/603064841_852513910716976_4597644483104201818_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=4seOd34VZeQQ7kNvwGIRuni&_nc_oc=AdlpLnhEXkeZ-gKItexDLXW0PF8F8ZydUDi9eITvONKX3K17Iv9Mxbs4soP8cN_oqRYty5YgzJnltdFC3VaMahYC&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=4hoNVsvVrcmcLMVXzAYJjw&oh=00_AfrVfFmly_3x1HPb7kSGJPpduYHTjje2YYyRHlx7DKgG7A&oe=695EF199">
         </div>
 
-        <div class="article-content">
-            <p><b>USA</b> — Trevor, an 18-year-old developer and gamer, is making headlines with his latest call for community. Balancing a passion for web architecture and competitive gaming, Trevor is officially looking for new peers to connect with.</p>
-            <p>He is known for his work in web development and his presence in titles like <i>Dead By Daylight</i> and <i>Minecraft</i>. "I love showcasing my work and my journey to new people," Trevor stated, emphasizing his goal of building lasting friendships in the space.</p>
+        <div style="margin-top: 30px;">
+            <p><b>USA</b> — Trevor, 18, is officially expanding his gaming community. Known for his background in web development and a diverse gaming library, he is currently accepting new peer connections across various platforms.</p>
         </div>
     </div>
 
     <div class="sidebar">
         <div class="widget">
-            <h3 class="widget-title">Active In</h3>
+            <h3 class="widget-title">Active Games</h3>
             <span class="game-tag">GTA V</span>
             <span class="game-tag">Minecraft</span>
             <span class="game-tag">Fortnite</span>
@@ -203,7 +199,7 @@
         </div>
 
         <div class="widget">
-            <h3 class="widget-title">Connect</h3>
+            <h3 class="widget-title">Player Socials</h3>
             <a href="javascript:void(0)" onclick="copyDiscord()" class="social-link">
                 <i class="fa-brands fa-discord"></i> Discord: Tr3vN0x
             </a>
@@ -217,8 +213,8 @@
     </div>
 </div>
 
-<footer style="text-align: center; padding: 40px; opacity: 0.5; font-size: 0.8rem;">
-    &copy; 2026 TREVOR.PRO
+<footer style="text-align: center; padding: 40px; opacity: 0.4; font-size: 0.8rem; border-top: 1px solid var(--border);">
+    PLAYERREC PLAYER DATABASE &copy; 2026
 </footer>
 
 <script>
@@ -232,7 +228,7 @@
 
     function copyDiscord() {
         navigator.clipboard.writeText("Tr3vN0x").then(() => {
-            alert("Discord ID: Tr3vN0x copied!");
+            alert("Discord ID Copied!");
         });
     }
 </script>

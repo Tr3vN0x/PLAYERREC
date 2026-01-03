@@ -6,269 +6,244 @@
     <title>Trevor | Personal Portfolio</title>
     
     <link rel="icon" type="image/png" href="https://img.icons8.com/fluency-systems-filled/96/f39c12/t.png">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&family=Oswald:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         :root {
             --accent: #f39c12;
-            --bg: #0a0a0c;
-            --card: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-dim: #a0a0a0;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg);
             color: #ffffff;
-            line-height: 1.6;
+            line-height: 1.5;
             overflow-x: hidden;
+            background-attachment: fixed;
         }
 
-        /* Ambient Glow & Texture */
-        .glow {
+        /* Animated Background */
+        .glow-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 10% 20%, rgba(243, 156, 18, 0.05) 0%, transparent 50%),
-                        radial-gradient(circle at 90% 80%, rgba(142, 68, 173, 0.05) 0%, transparent 50%);
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(243, 156, 18, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(243, 156, 18, 0.05) 0%, transparent 40%);
             z-index: -1;
         }
 
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/asfalt-light.png');
-            opacity: 0.05;
-            pointer-events: none;
-            z-index: 1;
-        }
-
+        /* Mobile-Friendly Nav */
         nav {
-            padding: 30px 10%;
+            padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             position: sticky;
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border);
         }
 
-        .logo { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: 2px; color: var(--accent); }
+        .logo { font-family: 'Oswald', sans-serif; font-size: 1.3rem; letter-spacing: 1px; color: var(--accent); }
 
         main {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 60px 10%;
+            padding: 40px 5%;
             display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 60px;
-            align-items: flex-start;
+            grid-template-columns: 450px 1fr;
+            gap: 50px;
         }
 
-        /* Slideshow Container */
+        /* Improved Slideshow */
         .slideshow-container {
-            position: sticky;
-            top: 120px;
             width: 100%;
-            aspect-ratio: 4/5;
-            border-radius: 30px;
+            aspect-ratio: 1/1; /* Square looks better on mobile */
+            border-radius: 24px;
             overflow: hidden;
             border: 1px solid var(--border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
 
         .slide {
             position: absolute;
-            top: 0; left: 0;
             width: 100%; height: 100%;
             opacity: 0;
-            transition: opacity 1.5s ease-in-out;
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
             object-fit: cover;
-            filter: grayscale(15%) contrast(105%);
         }
 
-        .slide.active {
-            opacity: 1;
-        }
+        .slide.active { opacity: 1; }
 
-        /* Bio Content Styling */
+        /* Typography Fixes */
         .content h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            line-height: 1;
+            font-size: clamp(2.5rem, 8vw, 4.5rem); /* Responsive font size */
+            font-weight: 800;
+            line-height: 0.9;
+            margin-bottom: 15px;
             letter-spacing: -2px;
         }
 
         .age-badge {
-            display: inline-block;
-            padding: 6px 18px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 25px;
+            background: var(--accent);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            vertical-align: middle;
+            margin-left: 10px;
         }
 
         .bio {
-            font-size: 1.15rem;
-            color: #b0b0b0;
-            margin-bottom: 40px;
-            border-left: 3px solid var(--accent);
-            padding-left: 20px;
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            margin-bottom: 30px;
+            max-width: 600px;
         }
 
+        /* Game Chips */
         .section-title {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 20px;
-            color: #666;
+            margin-bottom: 15px;
+            color: var(--accent);
             font-weight: 700;
         }
 
-        .tags { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 50px; }
+        .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; }
         .tag {
-            background: var(--card);
+            background: var(--glass);
             border: 1px solid var(--border);
-            padding: 10px 22px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: 0.3s;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: 0.2s;
         }
-        .tag:hover { border-color: var(--accent); background: rgba(243, 156, 18, 0.15); color: #fff; }
 
-        /* Social Media Grid */
+        /* Social Cards - Better for Mobile Tapping */
         .social-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
 
         .social-item {
-            background: var(--card);
+            background: var(--glass);
             border: 1px solid var(--border);
-            padding: 20px;
-            border-radius: 18px;
+            padding: 15px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            gap: 12px;
             text-decoration: none;
             color: white;
-            cursor: pointer;
+            transition: all 0.3s ease;
         }
+
+        .social-item i { font-size: 1.4rem; color: var(--accent); }
+        .social-username { font-size: 0.9rem; font-weight: 600; font-family: 'Oswald'; }
+        .social-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; display: block; }
 
         .social-item:hover {
+            background: rgba(255,255,255,0.06);
             border-color: var(--accent);
-            background: rgba(255, 255, 255, 0.07);
-            transform: scale(1.02);
+            transform: translateY(-2px);
         }
 
-        .social-item i {
-            font-size: 1.8rem;
-            width: 40px;
-            text-align: center;
-            color: var(--accent);
-        }
-
-        .social-info { display: flex; flex-direction: column; }
-        .social-label { font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; font-weight: 700; }
-        .social-username { font-weight: 700; font-size: 1.1rem; font-family: 'Oswald'; }
-
-        /* Icon Colors on Hover */
-        .social-item.discord:hover i { color: #5865F2; }
-        .social-item.snapchat:hover i { color: #FFFC00; }
-        .social-item.instagram:hover i { color: #E1306C; }
-        .social-item.twitter:hover i { color: #ffffff; }
-
+        /* Mobile Adjustments */
         @media (max-width: 900px) {
-            main { grid-template-columns: 1fr; }
-            .slideshow-container { position: static; max-width: 450px; margin: 0 auto; }
-            .content h1 { font-size: 3rem; text-align: center; }
-            .bio { text-align: center; border: none; padding: 0; }
-            .tags, .section-title { justify-content: center; text-align: center; }
+            main { grid-template-columns: 1fr; padding-top: 20px; }
+            .slideshow-container { max-width: 350px; margin: 0 auto 30px; }
+            .content { text-align: center; }
+            .bio { margin-left: auto; margin-right: auto; }
+            .tags { justify-content: center; }
+            .social-grid { grid-template-columns: 1fr; } /* Stack socials on small phones */
+        }
+
+        footer {
+            padding: 60px 0;
+            text-align: center;
+            font-size: 0.7rem;
+            opacity: 0.4;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-    <div class="glow"></div>
+    <div class="glow-bg"></div>
 
     <nav>
         <div class="logo">TREVOR.PRO</div>
-        <div style="font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; opacity: 0.6;">
-            <i class="fa-solid fa-circle" style="color: #2ecc71; font-size: 0.5rem; margin-right: 5px;"></i> PRO GAMER
-        </div>
+        <div style="font-size: 0.6rem; opacity: 0.7;"><i class="fa-solid fa-bolt"></i> ONLINE</div>
     </nav>
 
     <main>
         <div class="slideshow-container">
-            <img class="slide active" src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/607266518_858006396834394_2937293459458675257_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=zfJdBWwtNf0Q7kNvwEYhmbO&_nc_oc=AdnSqpZcwrvGNIQryT8jDuMmwLKrKk_UhZdNXnf2Ia_NATe_NFAMm3uTtuKONwdCV5n-Hcu3tndHWpub4x3JZvvO&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=VkydFUI7FCLU6yaafvskkg&oh=00_AfoyW_pNy_nww5PcfOa7vUEGxhyg4yN8gXD0949whCua7A&oe=695EDEBA" alt="Trevor One">
-            <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/605515347_854878180480549_1183865267160028360_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=99g3IsUrNGIQ7kNvwGGGrTv&_nc_oc=Adk0KUkDIki5mm8_Z6dFEFhGdvHa1ntbWQE9NtZbl7GumvniHvEuj6MExVtf4tLV6j5m7U67VxVBV41xw5n-fGQq&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=E6-NbxyQ_6uhgib_vAzLBA&oh=00_AfrXkccvGodAdrfV5TNuR636_nwneNGbiYI1qNYfWVHJVg&oe=695F09D2" alt="Trevor Two">
-            <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/603064841_852513910716976_4597644483104201818_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=4seOd34VZeQQ7kNvwGIRuni&_nc_oc=AdlpLnhEXkeZ-gKItexDLXW0PF8F8ZydUDi9eITvONKX3K17Iv9Mxbs4soP8cN_oqRYty5YgzJnltdFC3VaMahYC&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=4hoNVsvVrcmcLMVXzAYJjw&oh=00_AfrVfFmly_3x1HPb7kSGJPpduYHTjje2YYyRHlx7DKgG7A&oe=695EF199" alt="Trevor Three">
+            <img class="slide active" src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/607266518_858006396834394_2937293459458675257_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=zfJdBWwtNf0Q7kNvwEYhmbO&_nc_oc=AdnSqpZcwrvGNIQryT8jDuMmwLKrKk_UhZdNXnf2Ia_NATe_NFAMm3uTtuKONwdCV5n-Hcu3tndHWpub4x3JZvvO&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=VkydFUI7FCLU6yaafvskkg&oh=00_AfoyW_pNy_nww5PcfOa7vUEGxhyg4yN8gXD0949whCua7A&oe=695EDEBA">
+            <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/605515347_854878180480549_1183865267160028360_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=99g3IsUrNGIQ7kNvwGGGrTv&_nc_oc=Adk0KUkDIki5mm8_Z6dFEFhGdvHa1ntbWQE9NtZbl7GumvniHvEuj6MExVtf4tLV6j5m7U67VxVBV41xw5n-fGQq&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=E6-NbxyQ_6uhgib_vAzLBA&oh=00_AfrXkccvGodAdrfV5TNuR636_nwneNGbiYI1qNYfWVHJVg&oe=695F09D2">
+            <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/603064841_852513910716976_4597644483104201818_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=4seOd34VZeQQ7kNvwGIRuni&_nc_oc=AdlpLnhEXkeZ-gKItexDLXW0PF8F8ZydUDi9eITvONKX3K17Iv9Mxbs4soP8cN_oqRYty5YgzJnltdFC3VaMahYC&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=4hoNVsvVrcmcLMVXzAYJjw&oh=00_AfrVfFmly_3x1HPb7kSGJPpduYHTjje2YYyRHlx7DKgG7A&oe=695EF199">
         </div>
 
         <div class="content">
-            <span class="age-badge">18 Years Old</span>
-            <h1>Hello, I'm Trevor.</h1>
+            <h1>Trevor<span class="age-badge">18</span></h1>
             
             <p class="bio">
-                Hello, and welcome to my website. I am Trevor from the USA. I'm currently looking for friends and peers, especially within the gaming community. I build websites in my spare time and love showcasing my work and my journey to new people.
+                USA based creator and gamer. I build web experiences and hunt for the best gaming communities. Looking for peers and new friends to join the journey.
             </p>
 
-            <div class="section-title">Favorite Titles</div>
+            <div class="section-title">Library</div>
             <div class="tags">
-                <span class="tag">Grand Theft Auto V</span>
+                <span class="tag">GTA V</span>
                 <span class="tag">Minecraft</span>
                 <span class="tag">Fortnite</span>
                 <span class="tag">Roblox</span>
                 <span class="tag">PUBG</span>
                 <span class="tag">Dead By Daylight</span>
-                <span class="tag">Rocket League</span>
             </div>
 
-            <div class="section-title">Network // Socials</div>
+            <div class="section-title">Connect</div>
             <div class="social-grid">
-                <div class="social-item discord" onclick="copyDiscord()">
+                <div class="social-item" onclick="copyDiscord()">
                     <i class="fa-brands fa-discord"></i>
-                    <div class="social-info">
-                        <span class="social-label">Discord (Click to Copy)</span>
-                        <span class="social-username" id="discord-name">Tr3vN0x</span>
+                    <div>
+                        <span class="social-label">Discord</span>
+                        <span class="social-username">Tr3vN0x</span>
                     </div>
                 </div>
 
-                <a href="https://instagram.com/Tr3vN0x" target="_blank" class="social-item instagram">
+                <a href="https://instagram.com/Tr3vN0x" target="_blank" class="social-item">
                     <i class="fa-brands fa-instagram"></i>
-                    <div class="social-info">
+                    <div>
                         <span class="social-label">Instagram</span>
                         <span class="social-username">Tr3vN0x</span>
                     </div>
                 </a>
 
-                <div class="social-item snapchat">
+                <div class="social-item">
                     <i class="fa-brands fa-snapchat"></i>
-                    <div class="social-info">
+                    <div>
                         <span class="social-label">Snapchat</span>
                         <span class="social-username">Tr3vN0x</span>
                     </div>
                 </div>
 
-                <a href="https://twitter.com/Tr3vN0x" target="_blank" class="social-item twitter">
+                <a href="https://twitter.com/Tr3vN0x" target="_blank" class="social-item">
                     <i class="fa-brands fa-x-twitter"></i>
-                    <div class="social-info">
+                    <div>
                         <span class="social-label">Twitter / X</span>
                         <span class="social-username">Tr3vN0x</span>
                     </div>
@@ -277,29 +252,20 @@
         </div>
     </main>
 
-    <footer style="margin-top: 100px; padding: 40px; text-align: center; font-size: 0.7rem; opacity: 0.3; letter-spacing: 2px;">
-        &copy; 2026 TREVOR.PRO — ALL RIGHTS RESERVED
-    </footer>
+    <footer>&copy; 2026 TREVOR.PRO</footer>
 
     <script>
-        // Automatic Slideshow Logic
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
-        
-        function nextSlide() {
+        setInterval(() => {
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
-        }
+        }, 4000);
 
-        // Change image every 4 seconds
-        setInterval(nextSlide, 4000);
-
-        // Discord Copy Function
         function copyDiscord() {
-            const username = "Tr3vN0x";
-            navigator.clipboard.writeText(username).then(() => {
-                alert("Discord username copied: " + username);
+            navigator.clipboard.writeText("Tr3vN0x").then(() => {
+                alert("Discord Copied!");
             });
         }
     </script>

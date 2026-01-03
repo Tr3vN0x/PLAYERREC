@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trevor | Digital Profile</title>
+    <title>Trevor | Spotlight Profile</title>
     
-    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/96/news.png">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/96/controller.png">
     
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         :root {
-            --bg: #ffffff;
-            --text: #111111;
-            --accent: #e67e22; /* Gaming Orange */
-            --border: #eeeeee;
-            --secondary: #555555;
+            --bg: #0f0f12;
+            --card-bg: #16161a;
+            --accent: #ff4655; /* High energy Red/Orange */
+            --text: #ffffff;
+            --text-dim: #a0a0a8;
+            --border: #2a2a32;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,275 +29,252 @@
             line-height: 1.6;
         }
 
-        /* Top Nav Bar (Like a News Site) */
-        .news-nav {
-            border-bottom: 1px solid var(--border);
-            padding: 15px 5%;
+        /* Top Bar */
+        .news-header {
+            background: #000;
+            border-bottom: 2px solid var(--accent);
+            padding: 10px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
-            background: white;
             z-index: 1000;
         }
 
-        .nav-logo {
-            font-family: 'Archivo Black', sans-serif;
-            text-transform: uppercase;
-            font-size: 1.4rem;
-            letter-spacing: -1px;
+        .logo {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--text);
+            letter-spacing: 2px;
         }
 
-        .nav-logo span { color: var(--accent); }
+        .logo span { color: var(--accent); }
 
-        /* Main Container */
-        .article-container {
-            max-width: 1100px;
+        /* Article Layout */
+        .main-layout {
+            max-width: 1200px;
             margin: 0 auto;
             padding: 40px 5%;
             display: grid;
-            grid-template-columns: 1fr 320px; /* Main Article | Sidebar */
-            gap: 40px;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
         }
 
-        /* Article Header */
-        .category {
-            text-transform: uppercase;
-            font-weight: 800;
-            color: var(--accent);
+        /* Hero Image Section */
+        .hero-section { margin-bottom: 30px; }
+
+        .lfg-tag {
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            font-weight: 900;
             font-size: 0.8rem;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            display: block;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 15px;
+            border-radius: 2px;
         }
 
         h1 {
-            font-family: 'Archivo Black', sans-serif;
-            font-size: clamp(2rem, 5vw, 3.2rem);
-            line-height: 1.1;
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            line-height: 1;
             margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
         }
 
-        .author-box {
+        .meta-info {
             display: flex;
-            align-items: center;
-            gap: 12px;
+            gap: 20px;
             margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .author-box img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .author-info span {
-            display: block;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
             font-weight: 700;
         }
 
-        .author-info time {
-            font-size: 0.8rem;
-            color: var(--secondary);
-        }
-
-        /* Featured Slideshow */
-        .slideshow-wrapper {
-            margin-bottom: 30px;
-        }
-
+        /* Visible Image Slideshow */
         .slideshow-container {
             width: 100%;
-            aspect-ratio: 16/9; /* Modern Video/Image ratio */
+            aspect-ratio: 16/9;
             background: #000;
-            border-radius: 4px;
+            border-radius: 8px;
             overflow: hidden;
             position: relative;
+            border: 1px solid var(--border);
         }
 
         .slide {
             position: absolute;
             width: 100%; height: 100%;
             opacity: 0;
-            transition: opacity 1s ease-in-out;
+            transition: opacity 0.8s ease-in-out;
             object-fit: cover;
+            /* Remove grayscale - make images fully visible and vibrant */
+            filter: contrast(110%) brightness(100%);
         }
 
         .slide.active { opacity: 1; }
 
-        .image-credit {
-            font-size: 0.75rem;
-            color: var(--secondary);
-            margin-top: 8px;
-            text-align: right;
-            font-style: italic;
+        /* Bio Content */
+        .article-body {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 40px;
         }
 
-        /* Article Text */
-        .content p {
-            font-size: 1.15rem;
-            margin-bottom: 25px;
-            color: #333;
-        }
+        .article-body b { color: var(--text); }
 
-        /* Sidebar Section */
-        .sidebar-widget {
-            border-top: 3px solid var(--text);
-            padding-top: 15px;
-            margin-bottom: 40px;
+        /* Sidebar Widgets */
+        .widget {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 4px;
         }
 
         .widget-title {
-            font-family: 'Archivo Black', sans-serif;
-            font-size: 0.9rem;
+            font-family: 'Rajdhani', sans-serif;
             text-transform: uppercase;
-            margin-bottom: 15px;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
         }
 
-        /* Game Tags */
-        .game-list {
-            list-style: none;
-        }
-
-        .game-list li {
-            padding: 10px 0;
+        /* Game List Styling */
+        .game-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
             border-bottom: 1px solid var(--border);
             font-weight: 700;
             font-size: 0.9rem;
-            display: flex;
-            justify-content: space-between;
         }
 
-        /* Social Classifieds */
-        .social-links {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .game-item:last-child { border: none; }
+        .status-dot { color: var(--accent); font-size: 0.7rem; }
 
-        .social-btn {
+        /* Social Buttons */
+        .social-button {
             display: flex;
             align-items: center;
             gap: 15px;
-            padding: 12px;
-            background: #f9f9f9;
+            padding: 15px;
+            background: #1f1f25;
             text-decoration: none;
-            color: var(--text);
+            color: white;
             font-weight: 700;
-            font-size: 0.9rem;
             border-radius: 4px;
-            transition: background 0.2s;
+            margin-bottom: 10px;
+            transition: 0.3s;
+            border-left: 0 solid var(--accent);
         }
 
-        .social-btn:hover { background: #eeeeee; }
-        .social-btn i { font-size: 1.2rem; color: var(--accent); }
+        .social-button:hover {
+            background: #2a2a32;
+            border-left: 5px solid var(--accent);
+        }
 
-        /* Mobile Fix */
-        @media (max-width: 850px) {
-            .article-container { grid-template-columns: 1fr; }
-            .sidebar { order: 2; }
-            h1 { font-size: 2.2rem; }
+        .social-button i { font-size: 1.3rem; color: var(--accent); }
+
+        /* Mobile View */
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+            h1 { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="news-nav">
-        <div class="nav-logo">TREVOR<span>.NEWS</span></div>
-        <div class="nav-links"><i class="fa-solid fa-magnifying-glass"></i></div>
-    </nav>
+    <header class="news-header">
+        <div class="logo">PLAYER<span>REC</span></div>
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent);">[ STATUS: RECRUITING ]</div>
+    </header>
 
-    <div class="article-container">
-        <div class="main-article">
-            <span class="category">Spotlight // Profiles</span>
-            <h1>The Rise of Tr3vN0x: Building the Next Generation of Gaming Communities</h1>
-            
-            <div class="author-box">
-                <img src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/607266518_858006396834394_2937293459458675257_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=zfJdBWwtNf0Q7kNvwEYhmbO&_nc_oc=AdnSqpZcwrvGNIQryT8jDuMmwLKrKk_UhZdNXnf2Ia_NATe_NFAMm3uTtuKONwdCV5n-Hcu3tndHWpub4x3JZvvO&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=VkydFUI7FCLU6yaafvskkg&oh=00_AfoyW_pNy_nww5PcfOa7vUEGxhyg4yN8gXD0949whCua7A&oe=695EDEBA" alt="Trevor">
-                <div class="author-info">
-                    <span>By Trevor (Tr3vN0x)</span>
-                    <time id="date-now">Updated Jan 3, 2026</time>
+    <div class="main-layout">
+        <div class="content-area">
+            <div class="hero-section">
+                <span class="lfg-tag">Looking for Peers</span>
+                <h1>Trevor: The USA Creator Looking to Build a New Squad</h1>
+                
+                <div class="meta-info">
+                    <span>By News Desk</span>
+                    <span>Updated: Jan 3, 2026</span>
+                    <span><i class="fa-solid fa-eye"></i> 1,240 Views</span>
                 </div>
-            </div>
 
-            <div class="slideshow-wrapper">
                 <div class="slideshow-container">
                     <img class="slide active" src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/607266518_858006396834394_2937293459458675257_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=zfJdBWwtNf0Q7kNvwEYhmbO&_nc_oc=AdnSqpZcwrvGNIQryT8jDuMmwLKrKk_UhZdNXnf2Ia_NATe_NFAMm3uTtuKONwdCV5n-Hcu3tndHWpub4x3JZvvO&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=VkydFUI7FCLU6yaafvskkg&oh=00_AfoyW_pNy_nww5PcfOa7vUEGxhyg4yN8gXD0949whCua7A&oe=695EDEBA">
                     <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/605515347_854878180480549_1183865267160028360_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=99g3IsUrNGIQ7kNvwGGGrTv&_nc_oc=Adk0KUkDIki5mm8_Z6dFEFhGdvHa1ntbWQE9NtZbl7GumvniHvEuj6MExVtf4tLV6j5m7U67VxVBV41xw5n-fGQq&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=E6-NbxyQ_6uhgib_vAzLBA&oh=00_AfrXkccvGodAdrfV5TNuR636_nwneNGbiYI1qNYfWVHJVg&oe=695F09D2">
                     <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/603064841_852513910716976_4597644483104201818_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=4seOd34VZeQQ7kNvwGIRuni&_nc_oc=AdlpLnhEXkeZ-gKItexDLXW0PF8F8ZydUDi9eITvONKX3K17Iv9Mxbs4soP8cN_oqRYty5YgzJnltdFC3VaMahYC&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=4hoNVsvVrcmcLMVXzAYJjw&oh=00_AfrVfFmly_3x1HPb7kSGJPpduYHTjje2YYyRHlx7DKgG7A&oe=695EF199">
                 </div>
-                <p class="image-credit">Photos courtesy of Trevor's Personal Archives</p>
             </div>
 
-            <div class="content">
-                <p><b>USA</b> — In the fast-paced world of digital entertainment, Trevor is making his mark. At 18 years old, the developer and gaming enthusiast is focusing on more than just high scores; he's building bridges. Based in the United States, Trevor has dedicated his free time to exploring the intersection of web architecture and multiplayer gaming.</p>
-                <p>"I'm currently looking for friends and peers, especially within the gaming community," Trevor says. "I build websites in my spare time and love showcasing my work and my journey to new people."</p>
-                <p>His journey is just beginning, but with a background in titles ranging from <i>GTA V</i> to <i>Dead By Daylight</i>, his digital footprint is growing daily.</p>
+            <div class="article-body">
+                <p><b>USA</b> — In a recent announcement that has caught the attention of the local gaming scene, 18-year-old creator <b>Trevor</b> (known online as <b>Tr3vN0x</b>) has opened up his circle for new connections.</p>
+                <p>Currently based in the United States, Trevor isn't just a gamer; he's a web developer who spends his spare time architecting digital spaces. His goal is simple: to find like-minded peers and friends to join him on his journey through the virtual world.</p>
+                <p>Whether he's surviving the fog in <i>Dead By Daylight</i> or building in <i>Minecraft</i>, Trevor is looking for people who share his passion for gaming and web culture. "I love showcasing my work and my journey to new people," he shared in a statement.</p>
             </div>
         </div>
 
         <div class="sidebar">
-            <div class="sidebar-widget">
-                <h3 class="widget-title">The Game Library</h3>
-                <ul class="game-list">
-                    <li>GTA V <span>★</span></li>
-                    <li>Minecraft <span>★</span></li>
-                    <li>Fortnite <span>★</span></li>
-                    <li>Roblox <span>★</span></li>
-                    <li>PUBG <span>★</span></li>
-                    <li>Dead By Daylight <span>★</span></li>
-                </ul>
+            <div class="widget">
+                <h3 class="widget-title">Active Library</h3>
+                <div class="game-item">GTA V <i class="fa-solid fa-circle status-dot"></i></div>
+                <div class="game-item">Minecraft <i class="fa-solid fa-circle status-dot"></i></div>
+                <div class="game-item">Fortnite <i class="fa-solid fa-circle status-dot"></i></div>
+                <div class="game-item">Roblox <i class="fa-solid fa-circle status-dot"></i></div>
+                <div class="game-item">PUBG <i class="fa-solid fa-circle status-dot"></i></div>
+                <div class="game-item">Dead By Daylight <i class="fa-solid fa-circle status-dot"></i></div>
             </div>
 
-            <div class="sidebar-widget">
-                <h3 class="widget-title">Connect With Me</h3>
+            <div class="widget">
+                <h3 class="widget-title">Player Links</h3>
                 <div class="social-links">
-                    <div class="social-btn" onclick="copyDiscord()" style="cursor:pointer;">
-                        <i class="fa-brands fa-discord"></i> Discord (Copy)
-                    </div>
-                    <a href="https://instagram.com/Tr3vN0x" target="_blank" class="social-btn">
+                    <a href="javascript:void(0)" onclick="copyDiscord()" class="social-button">
+                        <i class="fa-brands fa-discord"></i> Discord: Tr3vN0x
+                    </a>
+                    <a href="https://instagram.com/Tr3vN0x" target="_blank" class="social-button">
                         <i class="fa-brands fa-instagram"></i> Instagram
                     </a>
-                    <a href="#" class="social-btn">
-                        <i class="fa-brands fa-snapchat"></i> Snapchat
-                    </a>
-                    <a href="https://twitter.com/Tr3vN0x" target="_blank" class="social-btn">
+                    <a href="https://twitter.com/Tr3vN0x" target="_blank" class="social-button">
                         <i class="fa-brands fa-x-twitter"></i> Twitter / X
+                    </a>
+                    <a href="#" class="social-button">
+                        <i class="fa-brands fa-snapchat"></i> Snapchat
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer style="padding: 40px; text-align: center; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--secondary);">
-        &copy; 2026 TREVOR.PRO — ALL RIGHTS RESERVED
+    <footer style="background: #000; padding: 30px; text-align: center; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-dim);">
+        &copy; 2026 TREVOR.PRO — THE ULTIMATE GAMING PROFILE
     </footer>
 
     <script>
-        // Slideshow Script
+        // Smooth Slideshow
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         setInterval(() => {
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
-        }, 4000);
+        }, 3500);
 
-        // Discord Copy
+        // Copy Discord
         function copyDiscord() {
             navigator.clipboard.writeText("Tr3vN0x").then(() => {
-                alert("Discord ID Copied!");
+                alert("Discord ID: Tr3vN0x copied to clipboard!");
             });
         }
-
-        // Auto-Date Update
-        const today = new Date();
-        document.getElementById('date-now').innerText = "Updated " + today.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'});
     </script>
 </body>
 </html>

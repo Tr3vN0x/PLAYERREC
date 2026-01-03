@@ -72,46 +72,33 @@
             align-items: flex-start;
         }
 
-        /* Dual Image Grid Styling */
-        .image-stack {
+        /* Slideshow Container */
+        .slideshow-container {
             position: sticky;
             top: 120px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .image-container {
-            border-radius: 24px;
+            width: 100%;
+            aspect-ratio: 4/5; /* Maintains professional portrait shape */
+            border-radius: 30px;
             overflow: hidden;
             border: 1px solid var(--border);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-            transition: 0.4s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
         }
 
-        .image-container img {
-            width: 100%;
-            display: block;
-            filter: grayscale(10%) contrast(105%);
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        .slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            object-fit: cover;
+            filter: grayscale(15%) contrast(105%);
         }
 
-        .image-container:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
+        .slide.active {
+            opacity: 1;
         }
 
-        .image-container:hover img { transform: scale(1.05); }
-
-        /* Secondary (New) Image specific style */
-        .secondary-img {
-            width: 80%;
-            align-self: flex-end;
-            margin-top: -40px;
-            z-index: 2;
-            border: 2px solid var(--bg); /* Separation border */
-        }
-
+        /* Bio Content Styling */
         .content h1 {
             font-size: 4rem;
             font-weight: 700;
@@ -209,8 +196,7 @@
 
         @media (max-width: 900px) {
             main { grid-template-columns: 1fr; }
-            .image-stack { position: static; max-width: 500px; margin: 0 auto; flex-direction: row; }
-            .secondary-img { margin-top: 0; width: 50%; }
+            .slideshow-container { position: static; max-width: 450px; margin: 0 auto; }
             .content h1 { font-size: 3rem; text-align: center; }
             .bio { text-align: center; border: none; padding: 0; }
             .tags, .section-title { justify-content: center; text-align: center; }
@@ -229,13 +215,9 @@
     </nav>
 
     <main>
-        <div class="image-stack">
-            <div class="image-container">
-                <img src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/607266518_858006396834394_2937293459458675257_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=zfJdBWwtNf0Q7kNvwEYhmbO&_nc_oc=AdnSqpZcwrvGNIQryT8jDuMmwLKrKk_UhZdNXnf2Ia_NATe_NFAMm3uTtuKONwdCV5n-Hcu3tndHWpub4x3JZvvO&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=VkydFUI7FCLU6yaafvskkg&oh=00_AfoyW_pNy_nww5PcfOa7vUEGxhyg4yN8gXD0949whCua7A&oe=695EDEBA" alt="Trevor Main">
-            </div>
-            <div class="image-container secondary-img">
-                <img src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/605515347_854878180480549_1183865267160028360_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=99g3IsUrNGIQ7kNvwGGGrTv&_nc_oc=Adk0KUkDIki5mm8_Z6dFEFhGdvHa1ntbWQE9NtZbl7GumvniHvEuj6MExVtf4tLV6j5m7U67VxVBV41xw5n-fGQq&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=E6-NbxyQ_6uhgib_vAzLBA&oh=00_AfrXkccvGodAdrfV5TNuR636_nwneNGbiYI1qNYfWVHJVg&oe=695F09D2" alt="Trevor Second">
-            </div>
+        <div class="slideshow-container">
+            <img class="slide active" src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/607266518_858006396834394_2937293459458675257_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=zfJdBWwtNf0Q7kNvwEYhmbO&_nc_oc=AdnSqpZcwrvGNIQryT8jDuMmwLKrKk_UhZdNXnf2Ia_NATe_NFAMm3uTtuKONwdCV5n-Hcu3tndHWpub4x3JZvvO&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=VkydFUI7FCLU6yaafvskkg&oh=00_AfoyW_pNy_nww5PcfOa7vUEGxhyg4yN8gXD0949whCua7A&oe=695EDEBA" alt="Trevor One">
+            <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/605515347_854878180480549_1183865267160028360_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=99g3IsUrNGIQ7kNvwGGGrTv&_nc_oc=Adk0KUkDIki5mm8_Z6dFEFhGdvHa1ntbWQE9NtZbl7GumvniHvEuj6MExVtf4tLV6j5m7U67VxVBV41xw5n-fGQq&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=E6-NbxyQ_6uhgib_vAzLBA&oh=00_AfrXkccvGodAdrfV5TNuR636_nwneNGbiYI1qNYfWVHJVg&oe=695F09D2" alt="Trevor Two">
         </div>
 
         <div class="content">
@@ -299,12 +281,24 @@
     </footer>
 
     <script>
+        // Automatic Slideshow Logic
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        // Change image every 4 seconds
+        setInterval(nextSlide, 4000);
+
+        // Discord Copy Function
         function copyDiscord() {
             const username = "Tr3vN0x";
             navigator.clipboard.writeText(username).then(() => {
                 alert("Discord username copied: " + username);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
             });
         }
     </script>

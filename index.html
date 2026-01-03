@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trevor | Spotlight Profile</title>
+    <title>Trevor | Full Profile</title>
     
     <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/96/controller.png">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         :root {
-            --bg: #0f0f12;
-            --card-bg: #16161a;
-            --accent: #ff4655; /* High energy Red/Orange */
+            --bg: #0b0b0e;
+            --card-bg: #121217;
+            --accent: #ff4655;
             --text: #ffffff;
-            --text-dim: #a0a0a8;
-            --border: #2a2a32;
+            --text-dim: #b0b0b8;
+            --border: #23232b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,11 +28,10 @@
             line-height: 1.6;
         }
 
-        /* Top Bar */
-        .news-header {
+        header {
             background: #000;
             border-bottom: 2px solid var(--accent);
-            padding: 10px 5%;
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -46,89 +44,74 @@
             font-family: 'Rajdhani', sans-serif;
             font-weight: 700;
             font-size: 1.8rem;
-            color: var(--text);
             letter-spacing: 2px;
         }
 
         .logo span { color: var(--accent); }
 
-        /* Article Layout */
         .main-layout {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 40px 5%;
             display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 30px;
+            grid-template-columns: 1fr 340px;
+            gap: 40px;
         }
 
-        /* Hero Image Section */
-        .hero-section { margin-bottom: 30px; }
-
-        .lfg-tag {
-            background: var(--accent);
-            color: white;
-            padding: 4px 12px;
-            font-weight: 900;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            display: inline-block;
-            margin-bottom: 15px;
-            border-radius: 2px;
-        }
-
-        h1 {
-            font-family: 'Inter', sans-serif;
-            font-weight: 900;
-            font-size: clamp(2rem, 6vw, 3.5rem);
-            line-height: 1;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-        }
-
-        .meta-info {
-            display: flex;
-            gap: 20px;
+        /* Full Size Image Container */
+        .slideshow-wrapper {
             margin-bottom: 30px;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            font-weight: 700;
+            position: relative;
         }
 
-        /* Visible Image Slideshow */
         .slideshow-container {
             width: 100%;
-            aspect-ratio: 16/9;
-            background: #000;
-            border-radius: 8px;
+            /* Vertical ratio to show full portrait images */
+            aspect-ratio: 3 / 4; 
+            background: #1a1a1f;
+            border-radius: 12px;
             overflow: hidden;
-            position: relative;
             border: 1px solid var(--border);
+            box-shadow: 0 0 30px rgba(255, 70, 85, 0.15);
         }
 
         .slide {
             position: absolute;
-            width: 100%; height: 100%;
+            width: 100%; 
+            height: 100%;
             opacity: 0;
             transition: opacity 0.8s ease-in-out;
-            object-fit: cover;
-            /* Remove grayscale - make images fully visible and vibrant */
-            filter: contrast(110%) brightness(100%);
+            /* "Contain" ensures the whole image is visible without cropping */
+            object-fit: cover; 
+            background-color: #000;
         }
 
         .slide.active { opacity: 1; }
 
-        /* Bio Content */
-        .article-body {
-            font-size: 1.1rem;
-            color: var(--text-dim);
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 40px;
+        h1 {
+            font-weight: 900;
+            font-size: clamp(2rem, 5vw, 3rem);
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-transform: uppercase;
         }
 
-        .article-body b { color: var(--text); }
+        .lfg-badge {
+            background: var(--accent);
+            padding: 4px 12px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .article-content {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+        }
+
+        .article-content b { color: #fff; }
 
         /* Sidebar Widgets */
         .widget {
@@ -136,145 +119,123 @@
             border: 1px solid var(--border);
             padding: 25px;
             margin-bottom: 20px;
-            border-radius: 4px;
+            border-radius: 8px;
         }
 
         .widget-title {
             font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
             text-transform: uppercase;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--accent);
-            padding-left: 15px;
+            margin-bottom: 15px;
+            color: var(--accent);
         }
 
-        /* Game List Styling */
-        .game-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
+        .game-tag {
+            display: inline-block;
+            background: #1e1e24;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
             font-weight: 700;
-            font-size: 0.9rem;
+            margin: 0 5px 10px 0;
+            border: 1px solid var(--border);
         }
 
-        .game-item:last-child { border: none; }
-        .status-dot { color: var(--accent); font-size: 0.7rem; }
-
-        /* Social Buttons */
-        .social-button {
+        .social-link {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 15px;
-            background: #1f1f25;
-            text-decoration: none;
+            gap: 12px;
+            padding: 14px;
+            background: #1e1e24;
             color: white;
+            text-decoration: none;
             font-weight: 700;
-            border-radius: 4px;
             margin-bottom: 10px;
+            border-radius: 6px;
             transition: 0.3s;
-            border-left: 0 solid var(--accent);
         }
 
-        .social-button:hover {
-            background: #2a2a32;
-            border-left: 5px solid var(--accent);
+        .social-link:hover {
+            background: var(--accent);
         }
 
-        .social-button i { font-size: 1.3rem; color: var(--accent); }
-
-        /* Mobile View */
-        @media (max-width: 900px) {
+        @media (max-width: 850px) {
             .main-layout { grid-template-columns: 1fr; }
-            h1 { font-size: 2.5rem; }
+            .slideshow-container { aspect-ratio: 4 / 5; }
         }
     </style>
 </head>
 <body>
 
-    <header class="news-header">
-        <div class="logo">PLAYER<span>REC</span></div>
-        <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent);">[ STATUS: RECRUITING ]</div>
-    </header>
+<header>
+    <div class="logo">PLAYER<span>REC</span></div>
+    <div style="font-size: 0.7rem; font-weight: 800; letter-spacing: 1px;">[ EST. 2026 ]</div>
+</header>
 
-    <div class="main-layout">
-        <div class="content-area">
-            <div class="hero-section">
-                <span class="lfg-tag">Looking for Peers</span>
-                <h1>Trevor: The USA Creator Looking to Build a New Squad</h1>
-                
-                <div class="meta-info">
-                    <span>By News Desk</span>
-                    <span>Updated: Jan 3, 2026</span>
-                    <span><i class="fa-solid fa-eye"></i> 1,240 Views</span>
-                </div>
-
-                <div class="slideshow-container">
-                    <img class="slide active" src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/607266518_858006396834394_2937293459458675257_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=zfJdBWwtNf0Q7kNvwEYhmbO&_nc_oc=AdnSqpZcwrvGNIQryT8jDuMmwLKrKk_UhZdNXnf2Ia_NATe_NFAMm3uTtuKONwdCV5n-Hcu3tndHWpub4x3JZvvO&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=VkydFUI7FCLU6yaafvskkg&oh=00_AfoyW_pNy_nww5PcfOa7vUEGxhyg4yN8gXD0949whCua7A&oe=695EDEBA">
-                    <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/605515347_854878180480549_1183865267160028360_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=99g3IsUrNGIQ7kNvwGGGrTv&_nc_oc=Adk0KUkDIki5mm8_Z6dFEFhGdvHa1ntbWQE9NtZbl7GumvniHvEuj6MExVtf4tLV6j5m7U67VxVBV41xw5n-fGQq&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=E6-NbxyQ_6uhgib_vAzLBA&oh=00_AfrXkccvGodAdrfV5TNuR636_nwneNGbiYI1qNYfWVHJVg&oe=695F09D2">
-                    <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/603064841_852513910716976_4597644483104201818_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=4seOd34VZeQQ7kNvwGIRuni&_nc_oc=AdlpLnhEXkeZ-gKItexDLXW0PF8F8ZydUDi9eITvONKX3K17Iv9Mxbs4soP8cN_oqRYty5YgzJnltdFC3VaMahYC&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=4hoNVsvVrcmcLMVXzAYJjw&oh=00_AfrVfFmly_3x1HPb7kSGJPpduYHTjje2YYyRHlx7DKgG7A&oe=695EF199">
-                </div>
-            </div>
-
-            <div class="article-body">
-                <p><b>USA</b> — In a recent announcement that has caught the attention of the local gaming scene, 18-year-old creator <b>Trevor</b> (known online as <b>Tr3vN0x</b>) has opened up his circle for new connections.</p>
-                <p>Currently based in the United States, Trevor isn't just a gamer; he's a web developer who spends his spare time architecting digital spaces. His goal is simple: to find like-minded peers and friends to join him on his journey through the virtual world.</p>
-                <p>Whether he's surviving the fog in <i>Dead By Daylight</i> or building in <i>Minecraft</i>, Trevor is looking for people who share his passion for gaming and web culture. "I love showcasing my work and my journey to new people," he shared in a statement.</p>
+<div class="main-layout">
+    <div class="main-content">
+        <span class="lfg-badge">SEARCHING FOR PEERS</span>
+        <h1>USA Creator Trevor Opens Recruitment for New Gaming Circle</h1>
+        
+        <div class="slideshow-wrapper">
+            <div class="slideshow-container">
+                <img class="slide active" src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/607266518_858006396834394_2937293459458675257_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=zfJdBWwtNf0Q7kNvwEYhmbO&_nc_oc=AdnSqpZcwrvGNIQryT8jDuMmwLKrKk_UhZdNXnf2Ia_NATe_NFAMm3uTtuKONwdCV5n-Hcu3tndHWpub4x3JZvvO&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=VkydFUI7FCLU6yaafvskkg&oh=00_AfoyW_pNy_nww5PcfOa7vUEGxhyg4yN8gXD0949whCua7A&oe=695EDEBA">
+                <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/605515347_854878180480549_1183865267160028360_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=99g3IsUrNGIQ7kNvwGGGrTv&_nc_oc=Adk0KUkDIki5mm8_Z6dFEFhGdvHa1ntbWQE9NtZbl7GumvniHvEuj6MExVtf4tLV6j5m7U67VxVBV41xw5n-fGQq&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=E6-NbxyQ_6uhgib_vAzLBA&oh=00_AfrXkccvGodAdrfV5TNuR636_nwneNGbiYI1qNYfWVHJVg&oe=695F09D2">
+                <img class="slide" src="https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/603064841_852513910716976_4597644483104201818_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=4seOd34VZeQQ7kNvwGIRuni&_nc_oc=AdlpLnhEXkeZ-gKItexDLXW0PF8F8ZydUDi9eITvONKX3K17Iv9Mxbs4soP8cN_oqRYty5YgzJnltdFC3VaMahYC&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=4hoNVsvVrcmcLMVXzAYJjw&oh=00_AfrVfFmly_3x1HPb7kSGJPpduYHTjje2YYyRHlx7DKgG7A&oe=695EF199">
             </div>
         </div>
 
-        <div class="sidebar">
-            <div class="widget">
-                <h3 class="widget-title">Active Library</h3>
-                <div class="game-item">GTA V <i class="fa-solid fa-circle status-dot"></i></div>
-                <div class="game-item">Minecraft <i class="fa-solid fa-circle status-dot"></i></div>
-                <div class="game-item">Fortnite <i class="fa-solid fa-circle status-dot"></i></div>
-                <div class="game-item">Roblox <i class="fa-solid fa-circle status-dot"></i></div>
-                <div class="game-item">PUBG <i class="fa-solid fa-circle status-dot"></i></div>
-                <div class="game-item">Dead By Daylight <i class="fa-solid fa-circle status-dot"></i></div>
-            </div>
-
-            <div class="widget">
-                <h3 class="widget-title">Player Links</h3>
-                <div class="social-links">
-                    <a href="javascript:void(0)" onclick="copyDiscord()" class="social-button">
-                        <i class="fa-brands fa-discord"></i> Discord: Tr3vN0x
-                    </a>
-                    <a href="https://instagram.com/Tr3vN0x" target="_blank" class="social-button">
-                        <i class="fa-brands fa-instagram"></i> Instagram
-                    </a>
-                    <a href="https://twitter.com/Tr3vN0x" target="_blank" class="social-button">
-                        <i class="fa-brands fa-x-twitter"></i> Twitter / X
-                    </a>
-                    <a href="#" class="social-button">
-                        <i class="fa-brands fa-snapchat"></i> Snapchat
-                    </a>
-                </div>
-            </div>
+        <div class="article-content">
+            <p><b>USA</b> — Trevor, an 18-year-old developer and gamer, is making headlines with his latest call for community. Balancing a passion for web architecture and competitive gaming, Trevor is officially looking for new peers to connect with.</p>
+            <p>He is known for his work in web development and his presence in titles like <i>Dead By Daylight</i> and <i>Minecraft</i>. "I love showcasing my work and my journey to new people," Trevor stated, emphasizing his goal of building lasting friendships in the space.</p>
         </div>
     </div>
 
-    <footer style="background: #000; padding: 30px; text-align: center; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-dim);">
-        &copy; 2026 TREVOR.PRO — THE ULTIMATE GAMING PROFILE
-    </footer>
+    <div class="sidebar">
+        <div class="widget">
+            <h3 class="widget-title">Active In</h3>
+            <span class="game-tag">GTA V</span>
+            <span class="game-tag">Minecraft</span>
+            <span class="game-tag">Fortnite</span>
+            <span class="game-tag">Roblox</span>
+            <span class="game-tag">PUBG</span>
+            <span class="game-tag">Dead By Daylight</span>
+        </div>
 
-    <script>
-        // Smooth Slideshow
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        setInterval(() => {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }, 3500);
+        <div class="widget">
+            <h3 class="widget-title">Connect</h3>
+            <a href="javascript:void(0)" onclick="copyDiscord()" class="social-link">
+                <i class="fa-brands fa-discord"></i> Discord: Tr3vN0x
+            </a>
+            <a href="https://instagram.com/Tr3vN0x" target="_blank" class="social-link">
+                <i class="fa-brands fa-instagram"></i> Instagram
+            </a>
+            <a href="https://twitter.com/Tr3vN0x" target="_blank" class="social-link">
+                <i class="fa-brands fa-x-twitter"></i> Twitter / X
+            </a>
+        </div>
+    </div>
+</div>
 
-        // Copy Discord
-        function copyDiscord() {
-            navigator.clipboard.writeText("Tr3vN0x").then(() => {
-                alert("Discord ID: Tr3vN0x copied to clipboard!");
-            });
-        }
-    </script>
+<footer style="text-align: center; padding: 40px; opacity: 0.5; font-size: 0.8rem;">
+    &copy; 2026 TREVOR.PRO
+</footer>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    setInterval(() => {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }, 4000);
+
+    function copyDiscord() {
+        navigator.clipboard.writeText("Tr3vN0x").then(() => {
+            alert("Discord ID: Tr3vN0x copied!");
+        });
+    }
+</script>
+
 </body>
 </html>

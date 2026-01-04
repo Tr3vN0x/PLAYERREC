@@ -3,226 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Burger World | Better Burgers & Fries</title>
+    <title>CYBER-BITE | Weirdly Delicious</title>
     <style>
-        /* --- CSS STYLING --- */
         :root {
-            --mcd-red: #da291c;
-            --mcd-yellow: #ffc72c;
-            --mcd-black: #27251f;
-            --mcd-white: #ffffff;
-            --mcd-bg: #f5f5f5;
+            --neon-pink: #ff00ff;
+            --neon-blue: #00f2ff;
+            --bg-dark: #0a0a0c;
+            --glass: rgba(255, 255, 255, 0.1);
         }
 
         * {
             margin: 0; padding: 0; box-sizing: border-box;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
         }
 
-        body { background-color: var(--mcd-white); color: var(--mcd-black); line-height: 1.6; }
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            overflow-x: hidden;
+        }
 
-        /* Navigation */
+        /* --- THE WEIRD STUFF --- */
+        .glitch-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        /* Moving floating emojis */
+        .floating-food {
+            position: absolute;
+            font-size: 5rem;
+            filter: drop-shadow(0 0 15px var(--neon-blue));
+            animation: float 6s ease-in-out infinite;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(20deg); }
+        }
+
+        /* --- HEADER --- */
         header {
-            background: var(--mcd-white);
-            padding: 1rem 8%;
-            position: sticky; top: 0; z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        .logo { font-size: 1.8rem; font-weight: 900; color: var(--mcd-red); text-decoration: none; }
-
-        .nav-links { display: flex; list-style: none; align-items: center; }
-        .nav-links li { margin: 0 1rem; }
-        .nav-links a { text-decoration: none; color: var(--mcd-black); font-weight: bold; font-size: 0.9rem; }
-
-        .btn-main {
-            background-color: var(--mcd-yellow);
-            color: var(--mcd-black);
-            padding: 10px 20px; border-radius: 4px; border: none;
-            font-weight: bold; cursor: pointer; transition: 0.2s;
-        }
-        .btn-main:hover { background-color: #f0b810; }
-
-        /* Hero */
-        .hero {
-            background-color: var(--mcd-bg);
-            padding: 4rem 8%;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .hero-text h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 1rem; }
-
-        /* Menu Section */
-        .menu-section { padding: 4rem 8%; text-align: center; }
-        .menu-section h2 { font-size: 2.5rem; margin-bottom: 2rem; }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .product-card {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 12px;
             padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--neon-pink);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--neon-pink);
+            text-shadow: 2px 2px var(--neon-blue);
+        }
+
+        /* --- MENU SECTION --- */
+        .weird-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 5rem 10%;
+        }
+
+        .weird-card {
+            background: var(--glass);
+            border: 1px solid var(--neon-blue);
+            padding: 2rem;
+            border-radius: 0px; /* Sharp edges for weirdness */
             position: relative;
-            transition: 0.3s;
-        }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-
-        .price-tag {
-            position: absolute; top: 15px; right: 15px;
-            background: var(--mcd-yellow);
-            padding: 5px 12px; border-radius: 20px; font-weight: bold;
+            transition: 0.4s;
+            overflow: hidden;
         }
 
-        .emoji { font-size: 5rem; display: block; margin-bottom: 1rem; }
-        .product-card h3 { margin-bottom: 0.5rem; }
-        .product-card p { font-size: 0.9rem; color: #666; margin-bottom: 1.5rem; }
-
-        /* Modal */
-        .modal {
-            display: none; position: fixed; z-index: 2000;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+        .weird-card:hover {
+            transform: skewX(-5deg) scale(1.05);
+            background: rgba(0, 242, 255, 0.1);
+            box-shadow: 10px 10px 0px var(--neon-pink);
         }
-        .modal-content {
-            background: white; margin: 10% auto; padding: 2rem;
-            width: 90%; max-width: 400px; border-radius: 12px; text-align: center;
-        }
-        .modal-content input {
-            width: 100%; padding: 12px; margin: 10px 0;
-            border: 1px solid #ddd; border-radius: 4px;
-        }
-        .close { float: right; cursor: pointer; font-size: 1.5rem; }
 
-        /* Footer */
-        footer { padding: 4rem 8%; border-top: 1px solid #eee; text-align: center; font-size: 0.9rem; color: #888; }
+        .weird-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--neon-blue);
+        }
 
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero { flex-direction: column; text-align: center; }
+        .weird-card .price {
+            font-size: 2rem;
+            color: var(--neon-pink);
+            font-weight: bold;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-glitch {
+            background: transparent;
+            color: white;
+            border: 2px solid var(--neon-pink);
+            padding: 10px 20px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .btn-glitch:hover {
+            background: var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            width: 20px; height: 20px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
         }
     </style>
 </head>
 <body>
 
+    <div class="glitch-bg"></div>
+    <div class="custom-cursor" id="cursor"></div>
+
+    <div class="floating-food" style="top: 20%; left: 10%;">🍔</div>
+    <div class="floating-food" style="top: 60%; right: 15%; animation-delay: 2s;">🍟</div>
+    <div class="floating-food" style="top: 10%; right: 5%; animation-delay: 4s;">🥤</div>
+
     <header>
-        <a href="#" class="logo">BURGER WORLD</a>
-        <ul class="nav-links">
-            <li><a href="#menu">Menu</a></li>
-            <li><a href="#">Locations</a></li>
-            <li><a href="#">Deals</a></li>
-            <li><button class="btn-main" id="auth-btn" onclick="toggleModal()">Login</button></li>
-        </ul>
+        <div class="logo">CYBER-BITE</div>
+        <button class="btn-glitch" id="loginBtn">Connect Soul</button>
     </header>
 
-    <section class="hero">
-        <div class="hero-text">
-            <h1>Crispy. Juicy. <br>Delivered.</h1>
-            <p>Sign in to earn points on every order.</p>
-            <button class="btn-main" style="padding: 15px 30px; margin-top: 1rem;">View Deals</button>
-        </div>
-        <div style="font-size: 10rem;">🍔</div>
-    </section>
+    <main>
+        <section style="text-align: center; padding: 100px 20px;">
+            <h1 id="glitch-text" style="font-size: 4rem; text-transform: uppercase;">Eat the Future</h1>
+            <p style="color: var(--neon-blue);">Warning: May contain digital flavors.</p>
+        </section>
 
-    <section class="menu-section" id="menu">
-        <h2>Our Favorites</h2>
-        <div class="product-grid">
-            <div class="product-card">
-                <span class="price-tag">$6.49</span>
-                <span class="emoji">🍔</span>
-                <h3>Big Stack Burger</h3>
-                <p>Two 100% beef patties, shredded lettuce, and our signature sauce.</p>
-                <button class="btn-main">Add to Cart</button>
+        <section class="weird-grid">
+            <div class="weird-card">
+                <h3>Vapor-Burger</h3>
+                <p>A burger that tastes like 1988. Compressed data beef and synth-lettuce.</p>
+                <div class="price">0.004 BTC</div>
+                <button class="btn-glitch">Consume</button>
             </div>
-            <div class="product-card">
-                <span class="price-tag">$2.99</span>
-                <span class="emoji">🍟</span>
-                <h3>Golden Fries</h3>
-                <p>The gold standard. Crispy, salty, and perfect.</p>
-                <button class="btn-main">Add to Cart</button>
+
+            <div class="weird-card">
+                <h3>Void Fries</h3>
+                <p>Potatoes harvested from the dark side of the moon. Zero calories, infinite salt.</p>
+                <div class="price">$13.37</div>
+                <button class="btn-glitch">Consume</button>
             </div>
-            <div class="product-card">
-                <span class="price-tag">$4.50</span>
-                <span class="emoji">🍦</span>
-                <h3>Choco-McFlurry</h3>
-                <p>Creamy vanilla soft serve mixed with chocolate chunks.</p>
-                <button class="btn-main">Add to Cart</button>
+
+            <div class="weird-card">
+                <h3>Neon Shake</h3>
+                <p>It glows in your stomach. Literally. Choice of Blue or Pink flavor.</p>
+                <div class="price">$9.99</div>
+                <button class="btn-glitch">Consume</button>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="toggleModal()">&times;</span>
-            <h2 id="modal-title">Sign In</h2>
-            <input type="email" id="email" placeholder="Email">
-            <input type="password" id="password" placeholder="Password">
-            <button class="btn-main" style="width: 100%; margin-top: 1rem;" onclick="handleAuth('login')">Login</button>
-            <button class="btn-main" style="width: 100%; margin-top: 0.5rem; background: #eee;" onclick="handleAuth('signup')">Create Account</button>
-            <p id="error-msg" style="color: red; font-size: 0.8rem; margin-top: 10px;"></p>
-        </div>
-    </div>
-
-    <footer>
-        <p>© 2024 Burger World. All Rights Reserved.</p>
-    </footer>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        // --- REPLACE THE KEYS BELOW WITH YOUR FIREBASE CONFIG ---
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-
-        // Modal Toggle
-        window.toggleModal = () => {
-            const modal = document.getElementById('login-modal');
-            modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
-        }
-
-        // Auth Logic
-        window.handleAuth = async (type) => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const errorMsg = document.getElementById('error-msg');
-
-            try {
-                if (type === 'login') {
-                    await signInWithEmailAndPassword(auth, email, password);
-                } else {
-                    await createUserWithEmailAndPassword(auth, email, password);
-                }
-                toggleModal();
-            } catch (error) {
-                errorMsg.innerText = error.message;
-            }
-        };
-
-        // UI State Update
-        onAuthStateChanged(auth, (user) => {
-            const authBtn = document.getElementById('auth-btn');
-            if (user) {
-                authBtn.innerText = "Logout (" + user.email.split('@')[0] + ")";
-                authBtn.onclick = () => signOut(auth);
-            } else {
-                authBtn.innerText = "Login";
-                authBtn.onclick = toggleModal;
-            }
+    <script>
+        // Custom Cursor movement
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
         });
+
+        // Make the login button run away (only once for fun)
+        const loginBtn = document.getElementById('loginBtn');
+        loginBtn.addEventListener('mouseover', () => {
+            loginBtn.style.transform = `translate(${Math.random() * 50}px, ${Math.random() * 20}px)`;
+        });
+
+        // Glitch text effect
+        const text = document.getElementById('glitch-text');
+        setInterval(() => {
+            text.style.textShadow = `${Math.random()*10}px ${Math.random()*10}px var(--neon-pink)`;
+            setTimeout(() => {
+                text.style.textShadow = 'none';
+            }, 100);
+        }, 2000);
     </script>
 </body>
 </html>

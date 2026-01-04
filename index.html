@@ -11,269 +11,129 @@
         :root {
             --primary: #00f2ff;
             --secondary: #7000ff;
-            --accent: #ff0000; /* YouTube Red */
+            --accent: #ff0000;
             --bg: #0a0a0a;
             --glass: rgba(255, 255, 255, 0.03);
         }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Rajdhani', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: white;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { background-color: var(--bg); color: white; overflow-x: hidden; scroll-behavior: smooth; }
 
         /* Scanline Effect */
         body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 9999;
-            pointer-events: none;
-            background-size: 100% 2px, 3px 100%;
+            content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 9999; pointer-events: none; background-size: 100% 2px, 3px 100%;
         }
 
-        /* Hero / Header Section */
         .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: radial-gradient(circle at center, rgba(112, 0, 255, 0.1) 0%, transparent 70%);
-            border-bottom: 1px solid var(--glass);
-        }
-
-        .profile-wrap {
-            position: relative;
-            margin-bottom: 30px;
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; background: radial-gradient(circle at center, rgba(112, 0, 255, 0.1) 0%, transparent 70%);
         }
 
         .profile-img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 20px;
-            border: 2px solid var(--primary);
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
-            transform: rotate(-2deg);
-            transition: 0.4s;
-        }
-
-        .profile-img:hover {
-            transform: rotate(0deg) scale(1.05);
-            border-color: var(--accent);
-            box-shadow: 0 0 40px rgba(255, 0, 0, 0.4);
+            width: 200px; height: 200px; object-fit: cover; border-radius: 20px;
+            border: 2px solid var(--primary); box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+            transform: rotate(-2deg); transition: 0.4s; margin-bottom: 20px;
         }
 
         .glitch-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(3rem, 10vw, 6rem);
-            font-weight: 900;
-            letter-spacing: 12px;
-            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif; font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 900; letter-spacing: 12px; text-transform: uppercase;
             text-shadow: 3px 3px var(--secondary), -3px -3px var(--primary);
-            margin-bottom: 10px;
         }
 
-        .hero-desc {
-            font-size: 1.2rem;
-            color: var(--primary);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 100px 20px; }
+        .section-title { font-family: 'Orbitron', sans-serif; text-align: center; font-size: 2rem; margin-bottom: 60px; letter-spacing: 5px; text-transform: uppercase; }
 
-        /* YouTube Section */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 100px 20px;
-        }
-
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 60px;
-            letter-spacing: 5px;
-            color: white;
-            text-transform: uppercase;
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
+        /* Firebase Video Grid */
+        #video-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
 
         .video-card {
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: 0.3s;
-            text-decoration: none;
-            color: white;
+            background: var(--glass); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 15px; overflow: hidden; transition: 0.3s; text-decoration: none; color: white;
         }
 
-        .video-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-            background: rgba(255, 255, 255, 0.08);
-        }
+        .video-card:hover { transform: translateY(-10px); border-color: var(--accent); background: rgba(255, 255, 255, 0.08); }
 
-        .thumb-placeholder {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: #1a1a1a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            border-bottom: 2px solid var(--accent);
-        }
+        .video-card iframe { width: 100%; aspect-ratio: 16/9; border: none; border-bottom: 2px solid var(--accent); }
 
-        .video-info {
-            padding: 20px;
-        }
+        .video-info { padding: 20px; }
+        .video-info h3 { font-size: 1.1rem; margin-bottom: 10px; }
 
-        .video-info h3 {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-
-        .video-meta {
-            font-size: 0.8rem;
-            color: #888;
-            text-transform: uppercase;
-        }
-
-        /* Stats Bar */
-        .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            flex-wrap: wrap;
-            margin-bottom: 50px;
-        }
-
-        .stat { text-align: center; }
-        .stat h4 { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: var(--primary); }
-        .stat p { font-size: 0.8rem; color: #555; text-transform: uppercase; letter-spacing: 2px; }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 60px;
-            background: #050505;
-            color: #444;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-        }
-
-        .sub-btn {
-            display: inline-block;
-            background: var(--accent);
-            color: white;
-            padding: 15px 40px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-            font-family: 'Orbitron', sans-serif;
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-        }
-
-        .sub-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
-        }
-
-        @media (max-width: 768px) {
-            .glitch-text { font-size: 3rem; }
-        }
+        footer { text-align: center; padding: 60px; background: #050505; color: #444; font-size: 0.8rem; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
     <section class="hero">
-        <div class="profile-wrap">
-            <img src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-1/607266518_858006396834394_2937293459458675257_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=103&ccb=1-7&_nc_sid=1d2534&_nc_ohc=CpJJRZ9kx_oQ7kxvwFppkdv&_nc_oc=Adm06wRfZhRFSC4xcLz-BgBXA2rhy3R3A2FCW1M_CO_tLPDr9SXzjsposSe3kVeZ-au7vRx1WX8_IXArEwHcdObd&_nc_zt=24&_nc_ht=scontent-iad3-2.xx&_nc_gid=IW_eOoRxRfyipNb30mB_pw&oh=00_AfpBZvc4jDEMijba7usiGUE7RSDULUfZtehQgO1qsxEKiQ&oe=69603740" alt="Trevor" class="profile-img">
-        </div>
+        <img src="https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-1/607266518_858006396834394_2937293459458675257_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=103&ccb=1-7&_nc_sid=1d2534&_nc_ohc=CpJJRZ9kx_oQ7kxvwFppkdv&_nc_oc=Adm06wRfZhRFSC4xcLz-BgBXA2rhy3R3A2FCW1M_CO_tLPDr9SXzjsposSe3kVeZ-au7vRx1WX8_IXArEwHcdObd&_nc_zt=24&_nc_ht=scontent-iad3-2.xx&_nc_gid=IW_eOoRxRfyipNb30mB_pw&oh=00_AfpBZvc4jDEMijba7usiGUE7RSDULUfZtehQgO1qsxEKiQ&oe=69603740" alt="Trevor" class="profile-img">
         <h1 class="glitch-text">Tr3vN0x</h1>
-        <p class="hero-desc">YouTuber • Creator • Gamer</p>
-        <a href="#uploads" class="sub-btn">VIEW CHANNEL</a>
+        <p style="letter-spacing: 5px; color: var(--primary);">YOUTUBER // CONTENT CREATOR</p>
     </section>
 
-    <div class="container" id="uploads">
-        <div class="stats-bar">
-            <div class="stat"><h4>ACTIVE</h4><p>DAILY UPLOADS</p></div>
-            <div class="stat"><h4>CREATIVE</h4><p>GAMING CONTENT</p></div>
-            <div class="stat"><h4>ENGAGED</h4><p>COMMUNITY</p></div>
-        </div>
-
+    <div class="container">
         <h2 class="section-title">Latest Uploads</h2>
-        
-        <div class="video-grid">
-            <a href="#" class="video-card">
-                <div class="thumb-placeholder">🧱</div>
-                <div class="video-info">
-                    <h3>Winning Big in Roblox: My Secret Strategy</h3>
-                    <p class="video-meta">Uploaded 2 days ago • Tr3vN0x</p>
-                </div>
-            </a>
-            <a href="#" class="video-card">
-                <div class="thumb-placeholder">🔪</div>
-                <div class="video-info">
-                    <h3>Dead by Daylight: Scariest Escape Yet!</h3>
-                    <p class="video-meta">Uploaded 5 days ago • Tr3vN0x</p>
-                </div>
-            </a>
-            <a href="#" class="video-card">
-                <div class="thumb-placeholder">🎯</div>
-                <div class="video-info">
-                    <h3>Valorant Highlights - Tr3vN0x Clutch Compilation</h3>
-                    <p class="video-meta">Uploaded 1 week ago • Tr3vN0x</p>
-                </div>
-            </a>
-            <a href="#" class="video-card">
-                <div class="thumb-placeholder">🚀</div>
-                <div class="video-info">
-                    <h3>Rocket League Pros vs One YouTuber</h3>
-                    <p class="video-meta">Uploaded 2 weeks ago • Tr3vN0x</p>
-                </div>
-            </a>
-            <a href="#" class="video-card">
-                <div class="thumb-placeholder">⛏️</div>
-                <div class="video-info">
-                    <h3>Building a Survival Base in Minecraft</h3>
-                    <p class="video-meta">Uploaded 3 weeks ago • Tr3vN0x</p>
-                </div>
-            </a>
-            <a href="#" class="video-card">
-                <div class="thumb-placeholder">✨</div>
-                <div class="video-info">
-                    <h3>MovieStarPlanet Social Challenge!</h3>
-                    <p class="video-meta">Uploaded 1 month ago • Tr3vN0x</p>
-                </div>
-            </a>
+        <div id="video-container">
+            <p style="text-align: center; grid-column: 1/-1;">Connecting to Database...</p>
         </div>
     </div>
 
     <footer>
-        <p>OFFICIAL HUB OF TR3VN0X // TREVOR</p>
-        <p style="margin-top: 10px;">COPYRIGHT 2024</p>
+        <p>OFFICIAL HUB OF TR3VN0X // TREVOR // 2024</p>
     </footer>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // REPLACE THIS with your actual Firebase Project Config
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadVideos() {
+            const videoContainer = document.getElementById('video-container');
+            
+            try {
+                // We assume you have a collection named "videos" in Firestore
+                const q = query(collection(db, "videos"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                videoContainer.innerHTML = ''; // Clear the "loading" text
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    
+                    // Create HTML for each video
+                    const videoCard = `
+                        <div class="video-card">
+                            <iframe src="https://www.youtube.com/embed/${data.youtubeId}" allowfullscreen></iframe>
+                            <div class="video-info">
+                                <h3>${data.title}</h3>
+                                <p style="color:#888; font-size:0.8rem;">${data.category || 'Gaming'}</p>
+                            </div>
+                        </div>
+                    `;
+                    videoContainer.innerHTML += videoCard;
+                });
+            } catch (error) {
+                console.error("Error loading videos: ", error);
+                videoContainer.innerHTML = "<p>Failed to load videos. Check Firebase config.</p>";
+            }
+        }
+
+        loadVideos();
+    </script>
 </body>
 </html>

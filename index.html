@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BloxWorld | Discover Games</title>
+    <title>BloxWorld | Play Games</title>
     <style>
         :root {
             --rbx-bg: #191b1d;
@@ -11,243 +11,157 @@
             --rbx-card: #393b3d;
             --rbx-text: #ffffff;
             --rbx-accent: #00a2ff;
+            --rbx-green: #00b06f;
         }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: "HCo Gotham SSm", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background-color: var(--rbx-bg); color: var(--rbx-text); display: flex; overflow: hidden; height: 100vh; }
 
-        body {
-            background-color: var(--rbx-bg);
-            color: var(--rbx-text);
-            display: flex;
-            min-height: 100vh;
-        }
+        /* Sidebar */
+        aside { width: 180px; background: var(--rbx-nav); padding: 20px 10px; border-right: 1px solid #333; }
+        .side-link { display: block; padding: 10px; color: #bbb; text-decoration: none; font-size: 14px; margin-bottom: 5px; border-radius: 4px; }
+        .side-link:hover { background: #333; color: white; }
 
-        /* --- SIDEBAR NAVIGATION --- */
-        aside {
-            width: 200px;
-            background-color: var(--rbx-nav);
-            padding: 20px 10px;
-            position: fixed;
-            height: 100vh;
-            border-right: 1px solid #444;
-        }
-
-        .side-link {
-            display: block;
-            padding: 12px;
-            color: #ccc;
-            text-decoration: none;
-            font-size: 14px;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-
-        .side-link:hover {
-            background: rgba(255,255,255,0.1);
-            color: white;
-        }
-
-        /* --- MAIN CONTENT AREA --- */
-        main {
-            margin-left: 200px;
-            width: calc(100% - 200px);
-            padding: 0;
-        }
-
-        /* Top Bar */
-        header {
-            background-color: var(--rbx-nav);
-            padding: 10px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo { font-weight: bold; font-size: 22px; letter-spacing: 1px; }
-
-        .search-bar {
-            background: #000;
-            border: 1px solid #555;
-            padding: 8px 15px;
-            border-radius: 5px;
-            width: 40%;
-            color: white;
-        }
-
-        .user-controls { display: flex; align-items: center; gap: 20px; }
-        .currency { color: #f3ad16; font-weight: bold; font-size: 14px; }
+        /* Main */
+        main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        header { background: var(--rbx-nav); padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        .logo { font-weight: bold; font-size: 20px; }
+        .currency { color: #f3ad16; font-weight: bold; }
 
         /* Game Grid */
-        .content-padding { padding: 40px; }
-        .section-title { margin-bottom: 20px; font-size: 24px; }
+        .content { padding: 30px; }
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
+        .game-card { cursor: pointer; background: var(--rbx-card); border-radius: 8px; padding: 10px; transition: 0.2s; text-align: center; }
+        .game-card:hover { transform: translateY(-5px); background: #4a4c4e; }
+        .thumb { font-size: 3rem; margin-bottom: 10px; }
 
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 20px;
+        /* --- GAME CLIENT OVERLAY --- */
+        #game-client {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.95); z-index: 2000; flex-direction: column; align-items: center; justify-content: center;
         }
-
-        .game-card {
-            cursor: pointer;
-            transition: transform 0.2s;
+        #canvas-container {
+            background: #000; width: 800px; height: 500px; border: 5px solid #333; border-radius: 10px;
+            position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-
-        .game-card:hover { transform: scale(1.03); }
-
-        .thumbnail {
-            width: 100%;
-            aspect-ratio: 1/1;
-            background-color: var(--rbx-card);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
+        .close-game { position: absolute; top: 20px; right: 20px; color: white; font-size: 30px; cursor: pointer; }
+        
+        /* Game Mechanics UI */
+        #game-ui { text-align: center; }
+        #click-target { 
+            font-size: 100px; cursor: pointer; user-select: none; transition: transform 0.1s; 
+            filter: drop-shadow(0 0 10px var(--rbx-accent));
         }
-
-        .game-info .title { font-weight: bold; font-size: 14px; display: block; }
-        .game-info .stats { font-size: 11px; color: #bbb; margin-top: 4px; }
-
-        /* Login Modal (Shared with previous logic) */
-        .modal {
-            display: none; position: fixed; z-index: 2000;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-        }
-        .modal-content {
-            background: #232527; margin: 10% auto; padding: 2rem;
-            width: 90%; max-width: 400px; border-radius: 8px; text-align: center;
-        }
-        .modal-content input {
-            width: 100%; padding: 12px; margin: 10px 0;
-            background: #000; border: 1px solid #444; color: white; border-radius: 4px;
-        }
-        .btn-blue {
-            background: var(--rbx-accent); color: white; border: none;
-            padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%;
+        #click-target:active { transform: scale(0.9); }
+        .score-board { font-size: 24px; margin-top: 20px; color: var(--rbx-green); font-weight: bold; }
+        
+        .play-btn { 
+            background: var(--rbx-green); color: white; border: none; padding: 15px 40px; 
+            font-size: 18px; border-radius: 5px; cursor: pointer; font-weight: bold;
         }
     </style>
 </head>
 <body>
 
     <aside>
+        <div style="color:#888; font-size:11px; margin-bottom:10px; padding-left:10px;">HOME</div>
         <a href="#" class="side-link">🏠 Home</a>
-        <a href="#" class="side-link">🕹️ Discover</a>
-        <a href="#" class="side-link">👤 Avatar</a>
-        <a href="#" class="side-link">💬 Chat</a>
-        <a href="#" class="side-link">🛒 Shop</a>
+        <a href="#" class="side-link">🎮 Games</a>
+        <a href="#" class="side-link">👕 Avatar</a>
+        <a href="#" class="side-link">💰 Trade</a>
     </aside>
 
     <main>
         <header>
             <div class="logo">BLOXWORLD</div>
-            <input type="text" class="search-bar" placeholder="Search Games...">
-            <div class="user-controls">
-                <span class="currency">⏣ 1,250</span>
-                <button class="btn-blue" id="auth-btn" onclick="toggleModal()" style="width: auto;">Login</button>
+            <div style="display:flex; gap:20px; align-items:center;">
+                <span class="currency">⏣ <span id="user-robux">100</span></span>
+                <div id="user-tag" style="font-size: 14px; font-weight: bold;">Guest_1234</div>
             </div>
         </header>
 
-        <div class="content-padding">
-            <h2 class="section-title">Recommended For You</h2>
+        <div class="content">
+            <h2 style="margin-bottom:20px;">Featured Games</h2>
             <div class="game-grid">
-                <div class="game-card">
-                    <div class="thumbnail">🏗️</div>
-                    <div class="game-info">
-                        <span class="title">Obby Master</span>
-                        <div class="stats">👍 89% | 👤 12.4K</div>
-                    </div>
+                <div class="game-card" onclick="launchGame('Clicker Tycoon', '💰')">
+                    <div class="thumb">💰</div>
+                    <div class="title">Clicker Tycoon</div>
+                    <div style="font-size:10px; color:#bbb;">Active: 1.2K</div>
                 </div>
-                <div class="game-card">
-                    <div class="thumbnail">🏎️</div>
-                    <div class="game-info">
-                        <span class="title">Nitro Racers</span>
-                        <div class="stats">👍 92% | 👤 5.1K</div>
-                    </div>
+                <div class="game-card" onclick="launchGame('Speed Run', '⚡')">
+                    <div class="thumb">⚡</div>
+                    <div class="title">Speed Run</div>
+                    <div style="font-size:10px; color:#bbb;">Active: 800</div>
                 </div>
-                <div class="game-card">
-                    <div class="thumbnail">🍕</div>
-                    <div class="game-info">
-                        <span class="title">Work at a Pizza Place</span>
-                        <div class="stats">👍 95% | 👤 25K</div>
-                    </div>
-                </div>
-                <div class="game-card">
-                    <div class="thumbnail">🧟</div>
-                    <div class="game-info">
-                        <span class="title">Zombie Survival</span>
-                        <div class="stats">👍 82% | 👤 8.9K</div>
-                    </div>
-                </div>
-                <div class="game-card">
-                    <div class="thumbnail">🏢</div>
-                    <div class="game-info">
-                        <span class="title">Brookhaven Tycoon</span>
-                        <div class="stats">👍 90% | 👤 100K</div>
-                    </div>
+                <div class="game-card" onclick="launchGame('Pizza Simulator', '🍕')">
+                    <div class="thumb">🍕</div>
+                    <div class="title">Pizza Simulator</div>
+                    <div style="font-size:10px; color:#bbb;">Active: 5K</div>
                 </div>
             </div>
         </div>
     </main>
 
-    <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <h2>Log In</h2>
-            <input type="email" id="email" placeholder="Email">
-            <input type="password" id="password" placeholder="Password">
-            <button class="btn-blue" onclick="handleAuth('login')">Log In</button>
-            <p id="error-msg" style="color: #ff5555; font-size: 12px; margin-top: 10px;"></p>
-            <button onclick="toggleModal()" style="background:none; border:none; color:#bbb; margin-top:15px; cursor:pointer;">Cancel</button>
+    <div id="game-client">
+        <span class="close-game" onclick="quitGame()">&times; Exit</span>
+        <h1 id="playing-title" style="margin-bottom: 20px;">Game Name</h1>
+        
+        <div id="canvas-container">
+            <div id="game-ui">
+                <div id="click-target">💰</div>
+                <div class="score-board">Earnings: <span id="game-score">0</span></div>
+                <p style="margin-top: 10px; color: #888;">Click the icon as fast as you can!</p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button class="play-btn" onclick="saveProgress()">Save & Quit</button>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    <script>
+        let currentScore = 0;
+        let totalRobux = 100;
 
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT",
-            appId: "YOUR_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-
-        window.toggleModal = () => {
-            const m = document.getElementById('login-modal');
-            m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+        // Launch the "Game Client"
+        function launchGame(title, emoji) {
+            document.getElementById('game-client').style.display = 'flex';
+            document.getElementById('playing-title').innerText = "Playing: " + title;
+            document.getElementById('click-target').innerText = emoji;
+            currentScore = 0;
+            updateDisplay();
         }
 
-        window.handleAuth = async (type) => {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('password').value;
-            try {
-                await signInWithEmailAndPassword(auth, e, p);
-                toggleModal();
-            } catch (err) {
-                document.getElementById('error-msg').innerText = err.message;
-            }
-        };
-
-        onAuthStateChanged(auth, (user) => {
-            const btn = document.getElementById('auth-btn');
-            if (user) {
-                btn.innerText = "Logout";
-                btn.onclick = () => signOut(auth);
-            } else {
-                btn.innerText = "Login";
-                btn.onclick = toggleModal;
-            }
+        // Game Logic: Click the emoji
+        document.getElementById('click-target').addEventListener('click', () => {
+            currentScore += 10;
+            updateDisplay();
+            
+            // Visual feedback
+            const target = document.getElementById('click-target');
+            target.style.transform = "scale(1.2)";
+            setTimeout(() => target.style.transform = "scale(1)", 50);
         });
+
+        function updateDisplay() {
+            document.getElementById('game-score').innerText = currentScore;
+        }
+
+        // Save progress (Simulating the "Robux" gain)
+        function saveProgress() {
+            const earnings = Math.floor(currentScore / 10);
+            totalRobux += earnings;
+            document.getElementById('user-robux').innerText = totalRobux;
+            alert("You earned ⏣ " + earnings + " from playing!");
+            quitGame();
+        }
+
+        function quitGame() {
+            document.getElementById('game-client').style.display = 'none';
+        }
+
+        // For real-time multiplayer or database saving, 
+        // you would use fetch() to send 'totalRobux' to a PHP file.
     </script>
 </body>
 </html>

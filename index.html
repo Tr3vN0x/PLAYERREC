@@ -37,7 +37,7 @@
         .glitch-text { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; letter-spacing: 8px; text-transform: uppercase; text-shadow: 2px 2px var(--secondary), -2px -2px var(--primary); }
 
         /* SOCIAL BAR */
-        .social-bar { display: flex; gap: 15px; margin-top: 25px; }
+        .social-bar { display: flex; gap: 15px; margin-top: 25px; min-height: 50px; }
         .social-link {
             width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
             background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
@@ -59,7 +59,7 @@
 
         /* ADMIN PANEL */
         #admin-panel { background: #111; padding: 25px; border-radius: 15px; border: 1px dashed var(--secondary); display: none; max-width: 500px; margin: 30px auto; }
-        .admin-section { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #222; }
+        .admin-section { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #222; }
         input { width: 100%; padding: 10px; margin: 5px 0; background: #000; border: 1px solid #333; color: white; border-radius: 5px; }
         .btn-main { background: var(--secondary); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 5px; }
         
@@ -72,7 +72,7 @@
 <body>
 
     <div id="live-banner">
-        🔴 Tr3vN0x is LIVE! <a href="#" id="live-link" style="color: white; margin-left: 10px;">JOIN NOW</a>
+        🔴 Tr3vN0x is LIVE! <a href="#" id="live-link" style="color: white; margin-left: 10px; text-decoration: underline;">JOIN NOW</a>
     </div>
 
     <section class="hero">
@@ -84,33 +84,33 @@
     <div class="container">
         <div id="admin-panel">
             <div class="admin-section">
-                <h3 style="color:var(--primary)">Live Status</h3>
-                <input type="text" id="stream-url" placeholder="Stream URL">
-                <button class="btn-main" onclick="updateLive(true)">Go Live</button>
-                <button class="btn-main" style="background:#444" onclick="updateLive(false)">End Stream</button>
-            </div>
-            <div class="admin-section">
-                <h3 style="color:var(--primary)">Social Links</h3>
-                <input type="text" id="snap-in" placeholder="Snapchat User">
+                <h3 style="color:var(--primary)">Live & Social Management</h3>
+                <input type="text" id="stream-url" placeholder="Paste Live Stream URL">
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-main" onclick="updateLive(true)">Go Live</button>
+                    <button class="btn-main" style="background:#444" onclick="updateLive(false)">End Stream</button>
+                </div>
+                <hr style="margin:15px 0; border:0; border-top:1px solid #333;">
+                <input type="text" id="snap-in" placeholder="Snapchat Username">
                 <input type="text" id="disc-in" placeholder="Discord URL">
                 <input type="text" id="insta-in" placeholder="Instagram URL">
                 <input type="text" id="twit-in" placeholder="Twitter URL">
-                <button class="btn-main" onclick="saveSocials()">Update Socials</button>
+                <button class="btn-main" onclick="saveSocials()">Save All Socials</button>
             </div>
             <div class="admin-section">
-                <h3 style="color:var(--primary)">Videos</h3>
-                <input type="text" id="v-title" placeholder="Title">
-                <input type="text" id="v-id" placeholder="YouTube ID">
+                <h3 style="color:var(--primary)">Video Upload</h3>
+                <input type="text" id="v-title" placeholder="Video Title">
+                <input type="text" id="v-id" placeholder="YouTube Video ID (e.g. dQw4w9WgXcQ)">
                 <input type="hidden" id="edit-id">
-                <button class="btn-main" id="sub-btn" onclick="handleVideo()">Publish</button>
+                <button class="btn-main" id="sub-btn" onclick="handleVideo()">Publish Video</button>
             </div>
         </div>
 
         <div id="video-grid"></div>
-        <p style="text-align:center; margin-top: 40px; opacity: 0.2; cursor: pointer;" onclick="toggleAdmin()">[ ADMIN ]</p>
+        <p style="text-align:center; margin-top: 40px; opacity: 0.2; cursor: pointer;" onclick="toggleAdmin()">[ ADMIN PANEL ]</p>
     </div>
 
-    <footer>&copy; 2024 LUNARTREV // TR3VNOX</footer>
+    <footer>&copy; 2024 LUNARTREV // TR3VNOX HUB</footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -129,12 +129,13 @@
         const db = getFirestore(app);
         let isAdmin = false;
 
-        // 1. DATA LISTENERS (Live, Socials, Videos)
+        // --- LISTENERS ---
         onSnapshot(doc(db, "settings", "live_status"), (d) => {
             if(d.exists()){
                 const data = d.data();
                 document.getElementById('live-banner').style.display = data.isLive ? 'block' : 'none';
-                document.getElementById('live-link').href = data.url;
+                document.getElementById('live-link').href = data.url || '#';
+                document.getElementById('stream-url').value = data.url || '';
             }
         });
 
@@ -147,6 +148,10 @@
                     <a href="${s.instagram}" class="social-link ig" target="_blank"><img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png"></a>
                     <a href="${s.twitter}" class="social-link tw" target="_blank"><img src="https://img.icons8.com/ios-filled/50/ffffff/twitterx.png"></a>
                 `;
+                document.getElementById('snap-in').value = s.snapchat || '';
+                document.getElementById('disc-in').value = s.discord || '';
+                document.getElementById('insta-in').value = s.instagram || '';
+                document.getElementById('twit-in').value = s.twitter || '';
             }
         });
 
@@ -162,14 +167,14 @@
                             <button class="btn-mini" style="background:var(--primary);color:black" onclick="setupEdit('${id}','${v.title}','${v.ytId}')">✎</button>
                             <button class="btn-mini" style="background:var(--danger)" onclick="deleteVideo('${id}')">✖</button>
                         </div>
-                        <iframe src="https://www.youtube.com/embed/${v.ytId}"></iframe>
+                        <iframe src="https://www.youtube.com/embed/${v.ytId}" allowfullscreen></iframe>
                         <div class="video-info"><h3>${v.title}</h3></div>
                     </div>
                 `;
             });
         });
 
-        // 2. ADMIN FUNCTIONS
+        // --- ADMIN ACTIONS ---
         window.toggleAdmin = () => {
             isAdmin = !isAdmin;
             document.getElementById('admin-panel').style.display = isAdmin ? 'block' : 'none';
@@ -177,32 +182,42 @@
         };
 
         window.updateLive = async (status) => {
-            await setDoc(doc(db, "settings", "live_status"), { isLive: status, url: document.getElementById('stream-url').value });
+            try {
+                await setDoc(doc(db, "settings", "live_status"), { isLive: status, url: document.getElementById('stream-url').value }, {merge: true});
+                alert(status ? "Live Banner Active!" : "Live Banner Hidden");
+            } catch(e) { alert("Error: " + e.message); }
         };
 
         window.saveSocials = async () => {
-            await setDoc(doc(db, "settings", "socials"), {
-                snapchat: document.getElementById('snap-in').value,
-                discord: document.getElementById('disc-in').value,
-                instagram: document.getElementById('insta-in').value,
-                twitter: document.getElementById('twit-in').value
-            });
+            try {
+                await setDoc(doc(db, "settings", "socials"), {
+                    snapchat: document.getElementById('snap-in').value,
+                    discord: document.getElementById('disc-in').value,
+                    instagram: document.getElementById('insta-in').value,
+                    twitter: document.getElementById('twit-in').value
+                }, {merge: true});
+                alert("Social Media Links Saved!");
+            } catch(e) { alert("Error: " + e.message); }
         };
 
         window.handleVideo = async () => {
             const title = document.getElementById('v-title').value;
             const ytId = document.getElementById('v-id').value;
             const editId = document.getElementById('edit-id').value;
-            if(!editId) await addDoc(collection(db, "videos"), { title, ytId, createdAt: serverTimestamp() });
-            else await updateDoc(doc(db, "videos", editId), { title, ytId });
-            document.getElementById('v-title').value = ''; document.getElementById('v-id').value = ''; document.getElementById('edit-id').value = '';
+            try {
+                if(!editId) await addDoc(collection(db, "videos"), { title, ytId, createdAt: serverTimestamp() });
+                else await updateDoc(doc(db, "videos", editId), { title, ytId });
+                document.getElementById('v-title').value = ''; document.getElementById('v-id').value = ''; document.getElementById('edit-id').value = '';
+                document.getElementById('sub-btn').innerText = "Publish Video";
+                alert("Video Saved!");
+            } catch(e) { alert("Error: " + e.message); }
         };
 
-        window.deleteVideo = async (id) => { if(confirm("Delete?")) await deleteDoc(doc(db, "videos", id)); };
+        window.deleteVideo = async (id) => { if(confirm("Delete this video?")) await deleteDoc(doc(db, "videos", id)); };
 
         window.setupEdit = (id, t, y) => {
             document.getElementById('v-title').value = t; document.getElementById('v-id').value = y; document.getElementById('edit-id').value = id;
-            document.getElementById('sub-btn').innerText = "Update"; window.scrollTo(0,0);
+            document.getElementById('sub-btn').innerText = "Update Video"; window.scrollTo(0,0);
         };
     </script>
 </body>

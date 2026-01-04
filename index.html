@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tr3vN0x | The Introduction</title>
+    <title>Tr3vN0x | The Architect</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@300;400;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         :root {
-            --hex-gold: #c8aa6e;
-            --hex-blue: #00d1ff;
-            --bg: #010a13;
-            --panel: rgba(10, 20, 30, 0.9);
+            --gold: #c8aa6e;
+            --blue: #00d1ff;
+            --bg: #02060a;
+            --panel: rgba(5, 15, 25, 0.8);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -22,217 +22,181 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             color: #fff;
-            overflow: hidden; /* Prevents normal scrolling for the PPT feel */
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* --- DECK NAVIGATION (The Slide Indicators) --- */
-        .deck-nav {
+        /* --- BACKGROUND DECOR --- */
+        .bg-glow {
             position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 1000;
-        }
-
-        .nav-dot {
-            width: 40px;
-            height: 4px;
-            background: rgba(200, 170, 110, 0.2);
-            border-radius: 2px;
-            transition: 0.5s;
-        }
-
-        .nav-dot.active {
-            background: var(--hex-blue);
-            box-shadow: 0 0 10px var(--hex-blue);
-            width: 60px;
-        }
-
-        /* --- SLIDE STRUCTURE --- */
-        .slide-container {
+            width: 100vw;
             height: 100vh;
-            width: 100%;
-            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            background: radial-gradient(circle at 50% 50%, rgba(0, 209, 255, 0.03) 0%, transparent 70%);
+            z-index: -1;
         }
 
+        /* --- SECTION STYLING --- */
         section {
-            height: 100vh;
-            width: 100%;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 5%;
-            position: relative;
-            background-image: radial-gradient(circle at center, rgba(0, 209, 255, 0.05) 0%, transparent 70%);
+            padding: 100px 10%;
         }
 
-        .slide-content {
-            max-width: 1000px;
+        .content-box {
+            max-width: 900px;
             width: 100%;
-            animation: fadeIn 1s ease-out;
         }
 
         /* --- TYPOGRAPHY --- */
+        .label {
+            font-family: 'Cinzel';
+            color: var(--blue);
+            font-size: 0.8rem;
+            letter-spacing: 5px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
         h1, h2 {
             font-family: 'Cinzel', serif;
-            color: var(--hex-gold);
-            text-transform: uppercase;
-            letter-spacing: 5px;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            line-height: 1;
+            margin-bottom: 25px;
+            color: var(--gold);
+        }
+
+        .intro-text {
+            font-size: 1.3rem;
+            color: #a0aeba;
+            font-weight: 300;
+        }
+
+        /* --- THE "ABOUT" CARDS --- */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: var(--panel);
+            border: 1px solid rgba(200, 170, 110, 0.2);
+            padding: 40px;
+            position: relative;
+            transition: 0.4s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--blue);
+            box-shadow: 0 0 30px rgba(0, 209, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .feature-card i {
+            font-size: 2rem;
+            color: var(--blue);
             margin-bottom: 20px;
         }
 
-        .slide-number {
+        /* --- BUTTONS --- */
+        .cta-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 15px 40px;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            text-decoration: none;
             font-family: 'Cinzel';
-            color: var(--hex-blue);
-            font-size: 1rem;
-            margin-bottom: 10px;
-            display: block;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            background: transparent;
         }
 
-        .big-text {
-            font-size: clamp(2rem, 5vw, 4rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 30px;
+        .cta-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 20px rgba(200, 170, 110, 0.4);
         }
 
-        /* --- COMPONENTS --- */
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .hex-border {
-            border: 1px solid var(--hex-gold);
-            padding: 30px;
-            position: relative;
-            background: var(--panel);
-        }
-
-        .scroll-hint {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
+        /* --- FOOTER --- */
+        footer {
+            padding: 50px;
+            text-align: center;
+            border-top: 1px solid rgba(200, 170, 110, 0.1);
             font-family: 'Cinzel';
             font-size: 0.7rem;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             opacity: 0.5;
-            animation: bounce 2s infinite;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes bounce { 0%, 100% { bottom: 30px; } 50% { bottom: 40px; } }
-
-        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <div class="deck-nav">
-        <div class="nav-dot active"></div>
-        <div class="nav-dot"></div>
-        <div class="nav-dot"></div>
-        <div class="nav-dot"></div>
+<div class="bg-glow"></div>
+
+<section>
+    <div class="content-box">
+        <span class="label">IDENTITY LOG // TR3VN0X</span>
+        <h1>I AM THE <br><span style="color: #fff;">ARCHITECT.</span></h1>
+        <p class="intro-text">
+            Mixing the precision of <b>Web Development</b> with the raw energy of <b>Gaming Culture</b>. 
+            I build digital spaces that don't just function—they leave an impact.
+        </p>
+        <a href="#about" class="cta-btn">Initiate Archive</a>
     </div>
+</section>
 
-    <div class="slide-container" id="mainContainer">
-        
-        <section>
-            <div class="slide-content" style="text-align: center;">
-                <span class="slide-number">SEQUENCE 01 // INTRODUCTION</span>
-                <h1 style="font-size: 1.5rem;">The Architect Protocol</h1>
-                <div class="big-text">I AM <span style="color: var(--hex-blue);">TR3VN0X</span></div>
-                <p style="letter-spacing: 3px; color: var(--hex-gold); opacity: 0.8;">WEB DEVELOPER • GAMER • COMMUNITY BUILDER</p>
-                <div style="height: 2px; width: 100px; background: var(--hex-gold); margin: 30px auto;"></div>
+<section id="about">
+    <div class="content-box">
+        <span class="label">BIOGRAPHY</span>
+        <h2>Bridging the Worlds.</h2>
+        <p style="color: #a0aeba; margin-bottom: 40px;">
+            Like the Hextech pioneers of Piltover, I believe technology should empower community. My journey as <b>Tr3vN0x</b> is about more than code; it's about building a network where creators, gamers, and developers collaborate as peers.
+        </p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <i class="fa-solid fa-code"></i>
+                <h3 style="font-family: 'Cinzel'; margin-bottom: 10px;">The Developer</h3>
+                <p style="font-size: 0.9rem; color: #889;">Specializing in immersive frontend design and community-focused web tools.</p>
             </div>
-        </section>
 
-        <section>
-            <div class="slide-content">
-                <div class="grid">
-                    <div>
-                        <span class="slide-number">SEQUENCE 02 // THE VISION</span>
-                        <h2>Why I Build</h2>
-                        <p style="font-size: 1.2rem; line-height: 1.8; color: #a0aeba;">
-                            In the world of <b>Arcane</b>, Hextech was about bridging the impossible. I apply that same philosophy to the web. 
-                            I don't just build websites; I build <b>digital ecosystems</b> where creators and players can thrive together.
-                        </p>
-                    </div>
-                    <div class="hex-border">
-                        <p style="font-style: italic; color: var(--hex-blue);">"Every line of code is a brick in the foundation of a new community."</p>
-                    </div>
-                </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-gamepad"></i>
+                <h3 style="font-family: 'Cinzel'; margin-bottom: 10px;">The Player</h3>
+                <p style="font-size: 0.9rem; color: #889;">Active in high-stakes competitive play and collaborative sandbox environments.</p>
             </div>
-        </section>
 
-        <section>
-            <div class="slide-content">
-                <span class="slide-number">SEQUENCE 03 // THE ARSENAL</span>
-                <h2>Core Competencies</h2>
-                <div class="grid" style="margin-top: 40px;">
-                    <div class="hex-border">
-                        <h3 style="color: var(--hex-blue); margin-bottom: 10px;">DEVELOPMENT</h3>
-                        <p style="font-size: 0.9rem; opacity: 0.7;">Full-stack capabilities with a focus on immersive, interactive UI/UX.</p>
-                    </div>
-                    <div class="hex-border">
-                        <h3 style="color: var(--hex-blue); margin-bottom: 10px;">COMMUNITY</h3>
-                        <p style="font-size: 0.9rem; opacity: 0.7;">Leading PLAYERREC, a movement dedicated to peer-to-peer creator growth.</p>
-                    </div>
-                </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-users-rays"></i>
+                <h3 style="font-family: 'Cinzel'; margin-bottom: 10px;">The Founder</h3>
+                <p style="font-size: 0.9rem; color: #889;">Leading <b>PLAYERREC</b>, a project dedicated to peer recruitment and creator growth.</p>
             </div>
-        </section>
-
-        <section>
-            <div class="slide-content" style="text-align: center;">
-                <span class="slide-number">SEQUENCE 04 // FINAL LOG</span>
-                <h2>Let's Build The Future</h2>
-                <div class="big-text">JOIN THE <span style="color: var(--hex-gold);">COUNCIL</span></div>
-                <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
-                    <a href="#" style="color: var(--hex-blue); text-decoration: none; font-weight: bold;">DISCORD</a>
-                    <a href="#" style="color: var(--hex-blue); text-decoration: none; font-weight: bold;">INSTAGRAM</a>
-                    <a href="#" style="color: var(--hex-blue); text-decoration: none; font-weight: bold;">GITHUB</a>
-                </div>
-            </div>
-        </section>
-
+        </div>
     </div>
+</section>
 
-    <div class="scroll-hint">USE MOUSE WHEEL TO NAVIGATE</div>
+<section>
+    <div class="content-box" style="text-align: center;">
+        <span class="label">CONNECTION NODES</span>
+        <h2>Join the Network.</h2>
+        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 40px; font-size: 1.5rem;">
+            <a href="#" style="color: var(--blue);"><i class="fa-brands fa-discord"></i></a>
+            <a href="#" style="color: var(--blue);"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" style="color: var(--blue);"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" style="color: var(--blue);"><i class="fa-brands fa-github"></i></a>
+        </div>
+        <p style="margin-top: 30px; font-size: 0.8rem; color: var(--gold); letter-spacing: 2px;">DISCORD ID: TR3VN0X</p>
+    </div>
+</section>
 
-    <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('section');
-        const dots = document.querySelectorAll('.nav-dot');
-        const container = document.getElementById('mainContainer');
-        let isScrolling = false;
+<footer>
+    EVERY MONSTER IS A SELF-PORTRAIT. // PLAYERREC 2026
+</footer>
 
-        window.addEventListener('wheel', (e) => {
-            if (isScrolling) return;
-            
-            if (e.deltaY > 0 && currentSlide < slides.length - 1) {
-                currentSlide++;
-            } else if (e.deltaY < 0 && currentSlide > 0) {
-                currentSlide--;
-            }
-            
-            updateSlide();
-        });
-
-        function updateSlide() {
-            isScrolling = true;
-            container.style.transform = `translateY(-${currentSlide * 100}vh)`;
-            
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentSlide);
-            });
-
-            setTimeout(() => { isScrolling = false; }, 800);
-        }
-    </script>
 </body>
 </html>
